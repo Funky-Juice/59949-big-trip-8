@@ -10,6 +10,8 @@ export const renderFilters = () => {
 };
 
 export const renderTripPoints = () => {
+  const num = Math.floor(Math.random() * 7) + 1;
+
   tripPointsContainer.innerHTML = ``;
-  tripPointsContainer.innerHTML = tripPointTemplate.repeat(7);
+  tripPointsContainer.innerHTML = tripPointTemplate.repeat(num);
 };
