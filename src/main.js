@@ -1,3 +1,4 @@
-import {renderFilters} from './render-elems';
+import {renderFilters, renderTripPoints} from './render-elems';
 
 renderFilters();
+renderTripPoints();
