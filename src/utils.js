@@ -39,3 +39,12 @@ export const getRandomString = (str, qty) => {
 export const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
+
+export const generateData = (template, objectsQty = 7) => {
+  const dataList = [];
+
+  for (let i = 0; i < objectsQty; i++) {
+    dataList.push(template());
+  }
+  return dataList;
+};
