@@ -1,5 +1,7 @@
 import filterTemplate from './templates/filter-template';
 import tripPointTemplate from './templates/trip-point-template';
+import {generateData} from './utils';
+import {dataTemplate} from './data/data';
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
@@ -9,9 +11,9 @@ export const renderFilters = () => {
   filtersContainer.innerHTML = filterTemplate;
 };
 
-export const renderTripPoints = () => {
-  const num = Math.floor(Math.random() * 7) + 1;
+export const renderTripPoints = (tasksQty) => {
+  const tasksData = generateData(dataTemplate, tasksQty);
 
   tripPointsContainer.innerHTML = ``;
-  tripPointsContainer.innerHTML = tripPointTemplate.repeat(num);
+  tripPointsContainer.innerHTML = tripPointTemplate(tasksData);
 };
