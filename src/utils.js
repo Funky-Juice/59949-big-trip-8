@@ -48,3 +48,10 @@ export const generateData = (template, objectsQty = 7) => {
   }
   return dataList;
 };
+
+export const createElement = (template) => {
+  const elem = document.createElement(`div`);
+  elem.innerHTML = template;
+
+  return elem.firstChild;
+};

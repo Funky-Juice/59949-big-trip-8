@@ -1,7 +1,6 @@
 import filterTemplate from './templates/filter-template';
-import tripPointTemplate from './templates/trip-point-template';
-import {generateData} from './utils';
 import {dataTemplate} from './data/data';
+import TripPointView from "./view/trip-point-view";
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
@@ -11,9 +10,9 @@ export const renderFilters = () => {
   filtersContainer.innerHTML = filterTemplate;
 };
 
-export const renderTripPoints = (tasksQty) => {
-  const tasksData = generateData(dataTemplate, tasksQty);
-
+export const renderTripPoints = () => {
   tripPointsContainer.innerHTML = ``;
-  tripPointsContainer.innerHTML = tripPointTemplate(tasksData);
+
+  const tripPoint = new TripPointView(dataTemplate());
+  tripPoint.render(tripPointsContainer);
 };
