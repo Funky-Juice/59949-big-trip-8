@@ -40,6 +40,42 @@ export const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
+export const getPicturesArr = (min, max) => {
+  const picturesSet = new Set();
+
+  for (let i = 0; i < getRandomInt(min, max); i++) {
+    picturesSet.add(`http://picsum.photos/300/150?r=${Math.random()}`);
+  }
+  return [...picturesSet];
+};
+
+export const getRandomTime = () => {
+  let startTime = null;
+  let endTime = null;
+
+  const oneDay = 24 * 60 * 60 * 1000;
+  const timeA = new Date(getRandomInt(Date.now(), Date.now() + oneDay));
+  const timeB = new Date(getRandomInt(Date.now(), Date.now() + oneDay));
+
+  if (timeA < timeB) {
+    startTime = timeA;
+    endTime = timeB;
+  } else {
+    startTime = timeB;
+    endTime = timeA;
+  }
+
+  const diff = endTime.getTime() - startTime.getTime();
+  const date = new Date(diff);
+  const duration = `${date.getHours() + (new Date().getTimezoneOffset() / 60)}h ${date.getMinutes()}m`;
+
+  return {
+    start: startTime.toLocaleTimeString(`ru`, {hour: `2-digit`, minute: `2-digit`}),
+    end: endTime.toLocaleTimeString(`ru`, {hour: `2-digit`, minute: `2-digit`}),
+    duration
+  };
+};
+
 export const generateData = (template, objectsQty = 7) => {
   const dataList = [];
 
