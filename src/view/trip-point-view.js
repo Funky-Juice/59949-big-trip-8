@@ -1,8 +1,9 @@
-import {createElement} from '../utils';
+import ComponentView from './component';
 
-export default class TripPointView {
+export default class TripPointView extends ComponentView {
 
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
@@ -10,29 +11,12 @@ export default class TripPointView {
     this._price = data.price;
     this._time = data.time;
 
-    this._element = null;
     this._onEdit = null;
     this._onPointClick = this._onPointClick.bind(this);
   }
 
-  get element() {
-    return this._element;
-  }
-
   set onClick(fn) {
     this._onEdit = fn;
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 
   _onPointClick() {
