@@ -313,6 +313,7 @@ input[type=radio]:checked + .trip-sorting__item {
 .trip-point__schedule {
   display: flex;
   flex-direction: column;
+  align-self: center;
   flex-basis: 178px;
   flex-shrink: 0;
   flex-grow: 0;
