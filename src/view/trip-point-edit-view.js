@@ -1,9 +1,10 @@
-import {createElement} from '../utils';
+import ComponentView from './component';
 import {DATA} from '../data/data';
 
-export default class TripPointEditView {
+export default class TripPointEditView extends ComponentView {
 
   constructor(data) {
+    super();
     this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
@@ -13,29 +14,12 @@ export default class TripPointEditView {
     this._price = data.price;
     this._time = data.time;
 
-    this._element = null;
     this._onSubmit = null;
     this._onFormSubmit = this._onFormSubmit.bind(this);
   }
 
-  get element() {
-    return this._element;
-  }
-
   set onSubmit(fn) {
     this._onSubmit = fn;
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 
   _onFormSubmit(evt) {
