@@ -1,5 +1,7 @@
 import ComponentView from './component';
 import {DATA} from '../data/data';
+// eslint-disable-next-line
+import flatpickr from 'flatpickr';
 
 export default class TripPointEditView extends ComponentView {
 
@@ -35,8 +37,7 @@ export default class TripPointEditView extends ComponentView {
         target.title = value;
       },
       time: (value) => {
-        // eslint-disable-next-line
-        const timeParams = value.split(` — `);
+        const timeParams = value.split(` — `);
         target.time.start = timeParams[0];
         target.time.end = timeParams[1];
       },
@@ -113,6 +114,16 @@ export default class TripPointEditView extends ComponentView {
   bind() {
     this._element.querySelector(`.point form`).addEventListener(`submit`, this._onFormSubmit);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
+
+    this._element.querySelector(`.point__time .point__input`).flatpickr({
+      locale: {
+        rangeSeparator: ` — `
+      },
+      mode: `range`,
+      enableTime: true,
+      dateFormat: `H:i`,
+      defaultDate: this._time
+    });
   }
 
   unbind() {
@@ -171,7 +182,12 @@ export default class TripPointEditView extends ComponentView {
       
             <label class="point__time">
               choose time
-              <input class="point__input" type="text" value="${this._time.start}&nbsp;&mdash; ${this._time.end}" name="time" placeholder="00:00 — 00:00">
+              <input class="point__input"
+                     type="text"
+                     name="time"
+                     placeholder="00:00 — 00:00"
+                     value="${this._time.start} — ${this._time.end}"
+              >
             </label>
       
             <label class="point__price">
