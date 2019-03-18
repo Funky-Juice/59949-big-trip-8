@@ -13,26 +13,111 @@ export default class TripPointEditView extends ComponentView {
     this._description = data.description;
     this._price = data.price;
     this._time = data.time;
+    this._isFavorite = data.isFavorite;
 
     this._onSubmit = null;
     this._onFormSubmit = this._onFormSubmit.bind(this);
+
+    this._onSetOffer = this._onSetOffer.bind(this);
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
 
+  static createMapper(target) {
+    return {
+      [`travel-way`]: (value) => {
+        target.type = value;
+        target.icon = DATA.ICONS[value];
+      },
+      destination: (value) => {
+        target.title = value;
+      },
+      time: (value) => {
+        // eslint-disable-next-line
+        const timeParams = value.split(` — `);
+        target.time.start = timeParams[0];
+        target.time.end = timeParams[1];
+      },
+      price: (value) => {
+        target.price = value;
+      },
+      favorite: (value) => {
+        target.isFavorite = value;
+      },
+      offer: (value) => {
+        target.offers.push(value);
+      }
+    };
+  }
+
+  _processForm(formData) {
+    const entry = {
+      type: ``,
+      title: ``,
+      time: {
+        start: ``,
+        end: ``
+      },
+      price: ``,
+      isFavorite: false,
+      offers: []
+    };
+
+    const taskEditMapper = TripPointEditView.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+
+      if (taskEditMapper[property]) {
+        taskEditMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
   _onFormSubmit(evt) {
     evt.preventDefault();
-    return typeof this._onSubmit === `function` && this._onSubmit();
+    const formData = new FormData(this._element.querySelector(`.point form`));
+    const newData = this._processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+
+    this.update(newData);
+  }
+
+  update(data) {
+    this._icon = data.icon;
+    this._type = data.type;
+    this._title = data.title;
+    this._time = data.time;
+    this._price = data.price;
+    this._isFavorite = data.isFavorite;
+  }
+
+  _onSetOffer(evt) {
+    if (evt.target.tagName.toLowerCase() === `input`) {
+
+      this._offers.forEach((it) => {
+        if (it.id === evt.target.id) {
+          it.isActive = !it.isActive;
+        }
+      });
+    }
   }
 
   bind() {
     this._element.querySelector(`.point form`).addEventListener(`submit`, this._onFormSubmit);
+    this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
   }
 
   unbind() {
     this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onFormSubmit);
+    this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
   }
 
   get template() {
@@ -101,7 +186,7 @@ export default class TripPointEditView extends ComponentView {
             </div>
       
             <div class="paint__favorite-wrap">
-              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+              <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
               <label class="point__favorite" for="favorite">favorite</label>
             </div>
           </header>
@@ -111,9 +196,15 @@ export default class TripPointEditView extends ComponentView {
               <h3 class="point__details-title">offers</h3>
       
               <div class="point__offers-wrap">
-                ${this._offers.map((offer, i) => `
-                  <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}-${i}" name="offer" value="${offer.name}">
-                  <label for="${offer.name}-${i}" class="point__offers-label">
+                ${this._offers.map((offer) => `
+                  <input class="point__offers-input visually-hidden"
+                         type="checkbox"
+                         name="offer"
+                         id="${offer.id}"
+                         value="${offer.name} + €${offer.price}"
+                         ${offer.isActive && `checked`}
+                  >
+                  <label for="${offer.id}" class="point__offers-label">
                     <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
                   </label>
                 `.trim()).join(``)}

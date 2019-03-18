@@ -26,7 +26,17 @@ export const renderTripPoints = () => {
     tripPoint.unrender();
   };
 
-  tripPointEdit.onSubmit = () => {
+  tripPointEdit.onSubmit = (newObject) => {
+    pointData.icon = newObject.icon;
+    pointData.type = newObject.type;
+    pointData.title = newObject.title;
+    pointData.time = newObject.time;
+    pointData.price = newObject.price;
+    pointData.isFavorite = newObject.isFavorite;
+    pointData.isFavorite = newObject.isFavorite;
+    pointData.activeOffers = newObject.offers;
+
+    tripPoint.update(pointData);
     tripPoint.render();
     tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
     tripPointEdit.unrender();

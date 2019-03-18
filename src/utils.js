@@ -18,8 +18,10 @@ export const getObjectsArray = (arr, qty) => {
 
   for (let i = 0; i < tempArr.length; i++) {
     newArr.push({
+      id: `offer-${i}`,
       name: tempArr[i],
-      price: getRandomInt(10, 201)
+      price: getRandomInt(10, 201),
+      isActive: false
     });
   }
   return newArr;
@@ -65,14 +67,9 @@ export const getRandomTime = () => {
     endTime = timeA;
   }
 
-  const diff = endTime.getTime() - startTime.getTime();
-  const date = new Date(diff);
-  const duration = `${date.getHours() + (new Date().getTimezoneOffset() / 60)}h ${date.getMinutes()}m`;
-
   return {
     start: startTime.toLocaleTimeString(`ru`, {hour: `2-digit`, minute: `2-digit`}),
-    end: endTime.toLocaleTimeString(`ru`, {hour: `2-digit`, minute: `2-digit`}),
-    duration
+    end: endTime.toLocaleTimeString(`ru`, {hour: `2-digit`, minute: `2-digit`})
   };
 };
 
