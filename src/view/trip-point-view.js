@@ -17,6 +17,7 @@ export default class TripPointView extends ComponentView {
 
   get duration() {
     const date = new Date();
+    const timezoneMS = new Date().getTimezoneOffset() * 60 * 1000;
     const startParams = this._time.start.split(`:`);
     const endParams = this._time.end.split(`:`);
 
@@ -28,12 +29,12 @@ export default class TripPointView extends ComponentView {
     date.setMinutes(endParams[1]);
     let endTimeStamp = date.getTime();
 
-    if (this._time.start > this._time.end) {
+    if (startTimeStamp > endTimeStamp) {
       endTimeStamp += 24 * 60 * 60 * 1000;
     }
 
-    const diff = new Date(endTimeStamp - startTimeStamp);
-    const duration = `${diff.getHours() + (new Date().getTimezoneOffset() / 60)}h ${diff.getMinutes()}m`;
+    const diff = new Date(endTimeStamp - startTimeStamp + timezoneMS);
+    const duration = `${diff.getHours()}h ${diff.getMinutes()}m`;
 
     return duration;
   }
