@@ -35,3 +35,15 @@ export const dataTemplate = () => {
     isDeleted: false
   };
 };
+
+export const filtersList = [
+  {
+    name: `everything`
+  },
+  {
+    name: `future`
+  },
+  {
+    name: `past`
+  }
+];

@@ -89,3 +89,20 @@ export const createElement = (template) => {
 
   return elem.firstChild;
 };
+
+export const filterPoints = (points, filterName) => {
+
+  switch (filterName) {
+    case `everything`:
+      return points;
+
+    case `future`:
+      return points.filter((it) => it.time > Date.now());
+
+    case `past`:
+      return points.filter((it) => it.time < Date.now());
+
+    default:
+      return points;
+  }
+};

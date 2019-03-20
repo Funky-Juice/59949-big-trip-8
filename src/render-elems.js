@@ -1,14 +1,24 @@
-import filterTemplate from './templates/filter-template';
 import TripPointView from './view/trip-point-view';
 import TripPointEditView from './view/trip-point-edit-view';
+import FilterView from './view/filter-view';
+import {filterPoints} from './utils';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
 
-export const renderFilters = () => {
+export const renderFilters = (filters, points) => {
   filtersContainer.innerHTML = ``;
-  filtersContainer.innerHTML = filterTemplate;
+
+  filters.forEach((filter) => {
+    const filterComponent = new FilterView(filter);
+    filtersContainer.appendChild(filterComponent.render());
+
+    filterComponent.onFilter = () => {
+      const filteredPoints = filterPoints(points, filterComponent.name);
+      renderTripPoints(filteredPoints);
+    };
+  });
 };
 
 export const renderTripPoints = (points) => {
