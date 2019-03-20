@@ -1,5 +1,4 @@
 import filterTemplate from './templates/filter-template';
-import {dataTemplate} from './data/data';
 import TripPointView from './view/trip-point-view';
 import TripPointEditView from './view/trip-point-edit-view';
 
@@ -11,34 +10,35 @@ export const renderFilters = () => {
   filtersContainer.innerHTML = filterTemplate;
 };
 
-export const renderTripPoints = () => {
-  const pointData = dataTemplate();
+export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
 
-  const tripPoint = new TripPointView(pointData);
-  const tripPointEdit = new TripPointEditView(pointData);
+  points.forEach((point) => {
+    const tripPoint = new TripPointView(point);
+    const tripPointEdit = new TripPointEditView(point);
 
-  tripPointsContainer.appendChild(tripPoint.render());
+    tripPointsContainer.appendChild(tripPoint.render());
 
-  tripPoint.onClick = () => {
-    tripPointEdit.render();
-    tripPointsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
-    tripPoint.unrender();
-  };
+    tripPoint.onClick = () => {
+      tripPointEdit.render();
+      tripPointsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
+      tripPoint.unrender();
+    };
 
-  tripPointEdit.onSubmit = (newObject) => {
-    pointData.icon = newObject.icon;
-    pointData.type = newObject.type;
-    pointData.title = newObject.title;
-    pointData.time = newObject.time;
-    pointData.price = newObject.price;
-    pointData.isFavorite = newObject.isFavorite;
-    pointData.isFavorite = newObject.isFavorite;
-    pointData.activeOffers = newObject.offers;
+    tripPointEdit.onSubmit = (newObject) => {
+      point.icon = newObject.icon;
+      point.type = newObject.type;
+      point.title = newObject.title;
+      point.time = newObject.time;
+      point.price = newObject.price;
+      point.isFavorite = newObject.isFavorite;
+      point.isFavorite = newObject.isFavorite;
+      point.activeOffers = newObject.offers;
 
-    tripPoint.update(pointData);
-    tripPoint.render();
-    tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
-    tripPointEdit.unrender();
-  };
+      tripPoint.update(point);
+      tripPoint.render();
+      tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      tripPointEdit.unrender();
+    };
+  });
 };

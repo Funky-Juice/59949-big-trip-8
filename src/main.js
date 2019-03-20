@@ -1,13 +1,18 @@
 import {renderFilters, renderTripPoints} from './render-elems';
+import {dataTemplate} from './data/data';
+import {generateData} from './utils';
+
+const pointsData = generateData(dataTemplate);
 
 renderFilters();
-renderTripPoints();
+renderTripPoints(pointsData);
 
 const filters = document.querySelectorAll(`.trip-filter input`);
 
 for (const filter of filters) {
   filter.onclick = (() => {
-    const qty = Math.floor(Math.random() * 7) + 1;
-    renderTripPoints(qty);
+    const pointsCount = Math.floor(Math.random() * 7) + 1;
+    const data = generateData(dataTemplate, pointsCount);
+    renderTripPoints(data);
   });
 }
