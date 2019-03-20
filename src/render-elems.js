@@ -2,6 +2,7 @@ import filterTemplate from './templates/filter-template';
 import TripPointView from './view/trip-point-view';
 import TripPointEditView from './view/trip-point-edit-view';
 
+
 const filtersContainer = document.querySelector(`.trip-filter`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
 
@@ -14,6 +15,9 @@ export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
 
   points.forEach((point) => {
+    if (point.isDeleted) {
+      return;
+    }
     const tripPoint = new TripPointView(point);
     const tripPointEdit = new TripPointEditView(point);
 
@@ -38,6 +42,11 @@ export const renderTripPoints = (points) => {
       tripPoint.update(point);
       tripPoint.render();
       tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      tripPointEdit.unrender();
+    };
+
+    tripPointEdit.onDelete = () => {
+      point.isDeleted = true;
       tripPointEdit.unrender();
     };
   });

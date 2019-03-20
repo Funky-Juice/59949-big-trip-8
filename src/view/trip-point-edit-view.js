@@ -21,10 +21,17 @@ export default class TripPointEditView extends ComponentView {
     this._onFormSubmit = this._onFormSubmit.bind(this);
 
     this._onSetOffer = this._onSetOffer.bind(this);
+
+    this._onDelete = null;
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
   }
 
   static createMapper(target) {
@@ -91,6 +98,14 @@ export default class TripPointEditView extends ComponentView {
     this.update(newData);
   }
 
+  _onDeleteButtonClick(evt) {
+    evt.preventDefault();
+
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
+    }
+  }
+
   update(data) {
     this._icon = data.icon;
     this._type = data.type;
@@ -114,6 +129,7 @@ export default class TripPointEditView extends ComponentView {
   bind() {
     this._element.querySelector(`.point form`).addEventListener(`submit`, this._onFormSubmit);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
+    this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
 
     this._element.querySelector(`.point__time .point__input`).flatpickr({
       locale: {
@@ -129,6 +145,7 @@ export default class TripPointEditView extends ComponentView {
   unbind() {
     this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onFormSubmit);
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
+    this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onDeleteButtonClick);
   }
 
   get template() {
@@ -198,7 +215,7 @@ export default class TripPointEditView extends ComponentView {
       
             <div class="point__buttons">
               <button class="point__button point__button--save" type="submit">Save</button>
-              <button class="point__button" type="reset">Delete</button>
+              <button class="point__button point__button--delete" type="reset">Delete</button>
             </div>
       
             <div class="paint__favorite-wrap">

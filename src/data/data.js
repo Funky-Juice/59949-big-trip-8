@@ -31,6 +31,7 @@ export const dataTemplate = () => {
     description: getRandomString(DATA.DESCRIPTION, 3),
     price: getRandomInt(10, 201),
     time: getRandomTime(),
-    isFavorite: false
+    isFavorite: false,
+    isDeleted: false
   };
 };
