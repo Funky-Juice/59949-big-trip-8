@@ -1,4 +1,4 @@
-import {getRandomValFromArr, getObjectsArray, getRandomString, getRandomInt, getPicturesArr, getRandomTime} from '../utils';
+import {getRandomValFromArr, getObjectsArray, getRandomString, getRandomInt, getPicturesArr, getRandomTime, generateData} from '../utils';
 
 export const DATA = {
   TYPE: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
@@ -47,3 +47,5 @@ export const filtersList = [
     name: `past`
   }
 ];
+
+export const pointsData = generateData(dataTemplate);

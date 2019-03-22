@@ -106,3 +106,44 @@ export const filterPoints = (points, filterName) => {
       return points;
   }
 };
+
+export const chartsDataAdapter = (points, data) => {
+  let moneyAmount = {};
+
+  const filteredPoints = points.filter((point) => !point.isDeleted);
+  if (!filteredPoints.length) {
+    return null;
+  }
+
+  data.TYPE.map((it) => {
+    moneyAmount[it] = null;
+
+    filteredPoints.map((point) => {
+      if (point.type === it) {
+        moneyAmount[it] += parseInt(point.price, 10);
+      }
+    });
+  });
+
+  for (const key in moneyAmount) {
+    if (!moneyAmount[key]) {
+      delete moneyAmount[key];
+    }
+  }
+
+  const sortedMoney = Object.entries(moneyAmount).sort((a, b) => b[1] - a[1]);
+
+  moneyAmount = {
+    labels: [],
+    data: []
+  };
+
+  sortedMoney.forEach((it) => {
+    moneyAmount.labels.push(it[0]);
+    moneyAmount.data.push(it[1]);
+  });
+
+  return {
+    money: moneyAmount
+  };
+};
