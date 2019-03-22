@@ -11,7 +11,7 @@ export const renderCharts = () => {
   const chartsData = chartsDataAdapter(pointsData, DATA);
 
   moneyChartLink = moneyChart(chartsData);
-  transportChartLink = transportChart();
+  transportChartLink = transportChart(chartsData);
 };
 
 export const destroyCharts = () => {
