@@ -89,3 +89,84 @@ export const createElement = (template) => {
 
   return elem.firstChild;
 };
+
+export const filterPoints = (points, filterName) => {
+
+  switch (filterName) {
+    case `everything`:
+      return points;
+
+    case `future`:
+      return points.filter((it) => it.time > Date.now());
+
+    case `past`:
+      return points.filter((it) => it.time < Date.now());
+
+    default:
+      return points;
+  }
+};
+
+const objEntriesToObj = (objEntries) => {
+  const tempObj = {
+    labels: [],
+    data: []
+  };
+
+  objEntries.forEach((it) => {
+    tempObj.labels.push(it[0]);
+    tempObj.data.push(it[1]);
+  });
+
+  return tempObj;
+};
+
+const sortObjValues = (obj) => {
+  return Object.entries(obj).sort((a, b) => b[1] - a[1]);
+};
+
+const deleteEmptyObjProps = (obj) => {
+  for (const key in obj) {
+    if (!obj[key]) {
+      delete obj[key];
+    }
+  }
+};
+
+export const chartsDataAdapter = (points, data) => {
+  let moneyAmount = {};
+  let transportAmount = {};
+
+  const actualPoints = points.filter((point) => !point.isDeleted);
+  if (!actualPoints.length) {
+    return null;
+  }
+
+  data.TYPE.map((it) => {
+    moneyAmount[it] = null;
+    actualPoints.map((point) => {
+      if (point.type === it) {
+        moneyAmount[it] += parseInt(point.price, 10);
+      }
+    });
+  });
+
+  deleteEmptyObjProps(moneyAmount);
+  const sortedMoney = sortObjValues(moneyAmount);
+  moneyAmount = objEntriesToObj(sortedMoney);
+
+
+  const tripTypesArr = actualPoints.map((task) => task.type);
+  tripTypesArr.forEach((type) => {
+    transportAmount[type] = (transportAmount[type] || 0) + 1;
+  });
+
+  const sortedTransport = sortObjValues(transportAmount);
+  transportAmount = objEntriesToObj(sortedTransport);
+
+
+  return {
+    money: moneyAmount,
+    transport: transportAmount
+  };
+};

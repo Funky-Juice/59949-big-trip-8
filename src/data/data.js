@@ -1,4 +1,4 @@
-import {getRandomValFromArr, getObjectsArray, getRandomString, getRandomInt, getPicturesArr, getRandomTime} from '../utils';
+import {getRandomValFromArr, getObjectsArray, getRandomString, getRandomInt, getPicturesArr, getRandomTime, generateData} from '../utils';
 
 export const DATA = {
   TYPE: [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`],
@@ -31,6 +31,21 @@ export const dataTemplate = () => {
     description: getRandomString(DATA.DESCRIPTION, 3),
     price: getRandomInt(10, 201),
     time: getRandomTime(),
-    isFavorite: false
+    isFavorite: false,
+    isDeleted: false
   };
 };
+
+export const filtersList = [
+  {
+    name: `everything`
+  },
+  {
+    name: `future`
+  },
+  {
+    name: `past`
+  }
+];
+
+export const pointsData = generateData(dataTemplate);
