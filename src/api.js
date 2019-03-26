@@ -1,3 +1,4 @@
+import TripModel from './data/trip-model';
 
 const Method = {
   GET: `GET`,
@@ -20,7 +21,11 @@ export default class API {
     this._authorization = authorization;
   }
 
-  getTrips() {}
+  getTrips() {
+    return this._load({url: `trips`})
+      .then((res) => res.json())
+      .then(TripModel.parseTrips);
+  }
 
   createTrip() {}
 

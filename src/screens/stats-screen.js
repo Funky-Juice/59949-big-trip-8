@@ -1,7 +1,8 @@
 import moneyChart from '../charts/money-chart';
 import transportChart from '../charts/transport-chart';
 import {chartsDataAdapter} from '../utils';
-import {pointsData, DATA} from '../data/data';
+import {DATA} from '../data/data';
+import {pointsData} from '../main';
 
 
 let moneyChartLink;
