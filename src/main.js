@@ -1,4 +1,4 @@
-import {renderFilters, renderTripPoints} from './render-elems';
+import {renderFilters, renderTripPoints} from './screens/trips-screen';
 import {pointsData, filtersList} from './data/data';
 import './menu';
 

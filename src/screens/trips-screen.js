@@ -1,7 +1,7 @@
-import TripPointView from './view/trip-point-view';
-import TripPointEditView from './view/trip-point-edit-view';
-import FilterView from './view/filter-view';
-import {filterPoints} from './utils';
+import TripPointView from '../view/trip-point-view';
+import TripPointEditView from '../view/trip-point-edit-view';
+import FilterView from '../view/filter-view';
+import {filterPoints} from '../utils';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
