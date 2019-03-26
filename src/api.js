@@ -29,7 +29,16 @@ export default class API {
 
   createTrip() {}
 
-  updateTrip() {}
+  updateTrip({id, data}) {
+    return this._load({
+      url: `trips/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((res) => res.json())
+      .then(TripModel.parseTrip);
+  }
 
   deleteTrip({id}) {
     return this._load({url: `trips/${id}`, method: Method.DELETE});

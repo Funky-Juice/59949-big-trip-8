@@ -50,10 +50,13 @@ export const renderTripPoints = (points) => {
       point.isFavorite = newObject.isFavorite;
       point.activeOffers = newObject.offers;
 
-      tripPoint.update(point);
-      tripPoint.render();
-      tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
-      tripPointEdit.unrender();
+      api.updateTrip({id: point.id, data: point.toRAW()})
+        .then((newPoint) => {
+          tripPoint.update(newPoint);
+          tripPoint.render();
+          tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+          tripPointEdit.unrender();
+        });
     };
 
     tripPointEdit.onDelete = (id) => {

@@ -13,6 +13,21 @@ export default class TripModel {
     this.isFavorite = data[`isFavorite`];
   }
 
+  toRAW() {
+    return {
+      'id': this.id,
+      'icon': this.icon,
+      'type': this.type,
+      'title': this.title,
+      'pictures': this.pictures,
+      'offers': this.offers,
+      'description': this.description,
+      'price': this.price,
+      'time': this.time,
+      'isFavorite': this.isFavorite,
+    };
+  }
+
   static parseTrip(data) {
     return new TripModel(data);
   }
