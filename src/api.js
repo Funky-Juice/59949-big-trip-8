@@ -31,7 +31,9 @@ export default class API {
 
   updateTrip() {}
 
-  deleteTrip() {}
+  deleteTrip({id}) {
+    return this._load({url: `trips/${id}`, method: Method.DELETE});
+  }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);

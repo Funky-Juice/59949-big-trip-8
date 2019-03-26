@@ -2,6 +2,7 @@ import TripPointView from '../view/trip-point-view';
 import TripPointEditView from '../view/trip-point-edit-view';
 import FilterView from '../view/filter-view';
 import {filterPoints} from '../utils';
+import {api, fetchTrips} from '../main';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
@@ -55,9 +56,9 @@ export const renderTripPoints = (points) => {
       tripPointEdit.unrender();
     };
 
-    tripPointEdit.onDelete = () => {
-      point.isDeleted = true;
-      tripPointEdit.unrender();
+    tripPointEdit.onDelete = (id) => {
+      api.deleteTrip(id)
+        .then(() => fetchTrips());
     };
   });
 };

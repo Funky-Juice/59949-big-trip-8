@@ -137,14 +137,13 @@ export const chartsDataAdapter = (points, data) => {
   let moneyAmount = {};
   let transportAmount = {};
 
-  const actualPoints = points.filter((point) => !point.isDeleted);
-  if (!actualPoints.length) {
+  if (!points) {
     return null;
   }
 
   data.TYPE.map((it) => {
     moneyAmount[it] = null;
-    actualPoints.map((point) => {
+    points.map((point) => {
       if (point.type === it) {
         moneyAmount[it] += parseInt(point.price, 10);
       }
@@ -156,7 +155,7 @@ export const chartsDataAdapter = (points, data) => {
   moneyAmount = objEntriesToObj(sortedMoney);
 
 
-  const tripTypesArr = actualPoints.map((task) => task.type);
+  const tripTypesArr = points.map((task) => task.type);
   tripTypesArr.forEach((type) => {
     transportAmount[type] = (transportAmount[type] || 0) + 1;
   });

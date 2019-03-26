@@ -7,6 +7,7 @@ export default class TripPointEditView extends ComponentView {
 
   constructor(data) {
     super();
+    this._id = data.id;
     this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
@@ -102,7 +103,7 @@ export default class TripPointEditView extends ComponentView {
     evt.preventDefault();
 
     if (typeof this._onDelete === `function`) {
-      this._onDelete();
+      this._onDelete({id: this._id});
     }
   }
 
