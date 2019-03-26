@@ -1,14 +1,16 @@
 import ComponentView from './component';
+import {DATA} from '../data/data';
+import {moment} from '../utils';
 
 export default class TripPointView extends ComponentView {
 
   constructor(data) {
     super();
-    this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
     this._price = data.price;
-    this._time = data.time;
+    this._dateFrom = data.dateFrom;
+    this._dateTo = data.dateTo;
     this._offers = [];
 
     this._onEdit = null;
@@ -16,27 +18,12 @@ export default class TripPointView extends ComponentView {
   }
 
   get duration() {
-    const date = new Date();
-    const timezoneMS = new Date().getTimezoneOffset() * 60 * 1000;
-    const startParams = this._time.start.split(`:`);
-    const endParams = this._time.end.split(`:`);
+    const diff = this._dateTo - this._dateFrom;
+    const hours = Math.floor(moment.duration(diff).asHours());
+    const minutes = moment.utc(diff).format(`mm`);
+    const time = `${hours}h ${minutes}m`;
 
-    date.setHours(startParams[0]);
-    date.setMinutes(startParams[1]);
-    const startTimeStamp = date.getTime();
-
-    date.setHours(endParams[0]);
-    date.setMinutes(endParams[1]);
-    let endTimeStamp = date.getTime();
-
-    if (startTimeStamp > endTimeStamp) {
-      endTimeStamp += 24 * 60 * 60 * 1000;
-    }
-
-    const diff = new Date(endTimeStamp - startTimeStamp + timezoneMS);
-    const duration = `${diff.getHours()}h ${diff.getMinutes()}m`;
-
-    return duration;
+    return time;
   }
 
   set onClick(fn) {
@@ -48,10 +35,10 @@ export default class TripPointView extends ComponentView {
   }
 
   update(data) {
-    this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
-    this._time = data.time;
+    this._dateFrom = data.dateFrom;
+    this._dateTo = data.dateTo;
     this._price = data.price;
     this._offers = data.activeOffers;
   }
@@ -67,10 +54,13 @@ export default class TripPointView extends ComponentView {
   get template() {
     return `
       <article class="trip-point">
-        <i class="trip-icon">${this._icon}</i>
+        <i class="trip-icon">${DATA.ICONS[this._type]}</i>
         <h3 class="trip-point__title">${this._type} to ${this._title}</h3>
         <p class="trip-point__schedule">
-          <span class="trip-point__timetable">${this._time.start}&nbsp;&mdash; ${this._time.end}</span>
+          <span class="trip-point__timetable">
+            ${moment(this._dateFrom).format(`H:mm`)}&nbsp;&mdash; 
+            ${moment(this._dateTo).format(`H:mm`)}
+          </span>
           <span class="trip-point__duration">${this.duration}</span>
         </p>
         <p class="trip-point__price">&euro;&nbsp;${this._price}</p>

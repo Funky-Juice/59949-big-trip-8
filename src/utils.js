@@ -141,7 +141,7 @@ export const chartsDataAdapter = (points, data) => {
     return null;
   }
 
-  data.TYPE.map((it) => {
+  Object.keys(data.ICONS).map((it) => {
     moneyAmount[it] = null;
     points.map((point) => {
       if (point.type === it) {

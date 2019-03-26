@@ -41,22 +41,25 @@ export const renderTripPoints = (points) => {
     };
 
     tripPointEdit.onSubmit = (newObject) => {
-      point.icon = newObject.icon;
       point.type = newObject.type;
       point.title = newObject.title;
-      point.time = newObject.time;
+      point.dateFrom = newObject.dateFrom;
+      point.dateTo = newObject.dateTo;
       point.price = newObject.price;
-      point.isFavorite = newObject.isFavorite;
       point.isFavorite = newObject.isFavorite;
       point.activeOffers = newObject.offers;
 
-      api.updateTripPoint({id: point.id, data: point.toRAW()})
-        .then((newPoint) => {
-          tripPoint.update(newPoint);
-          tripPoint.render();
-          tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
-          tripPointEdit.unrender();
-        });
+      tripPoint.update(point);
+      tripPoint.render();
+      tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      tripPointEdit.unrender();
+      // api.updateTripPoint({id: point.id, data: point.toRAW()})
+      //   .then((newPoint) => {
+      //     tripPoint.update(newPoint);
+      //     tripPoint.render();
+      //     tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      //     tripPointEdit.unrender();
+      //   });
     };
 
     tripPointEdit.onDelete = (id) => {

@@ -8,14 +8,14 @@ export default class TripPointEditView extends ComponentView {
   constructor(data) {
     super();
     this._id = data.id;
-    this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
     this._pictures = data.pictures;
     this._offers = data.offers;
     this._description = data.description;
     this._price = data.price;
-    this._time = data.time;
+    this._dateFrom = data.dateFrom;
+    this._dateTo = data.dateTo;
     this._isFavorite = data.isFavorite;
 
     this._onSubmit = null;
@@ -39,15 +39,15 @@ export default class TripPointEditView extends ComponentView {
     return {
       [`travel-way`]: (value) => {
         target.type = value;
-        target.icon = DATA.ICONS[value];
       },
       destination: (value) => {
         target.title = value;
       },
-      time: (value) => {
-        const timeParams = value.split(` — `);
-        target.time.start = timeParams[0];
-        target.time.end = timeParams[1];
+      [`date-start`]: (value) => {
+        target.dateFrom = value * 1000;
+      },
+      [`date-end`]: (value) => {
+        target.dateTo = value * 1000;
       },
       price: (value) => {
         target.price = value;
@@ -65,10 +65,8 @@ export default class TripPointEditView extends ComponentView {
     const entry = {
       type: ``,
       title: ``,
-      time: {
-        start: ``,
-        end: ``
-      },
+      dateFrom: ``,
+      dateTo: ``,
       price: ``,
       isFavorite: false,
       offers: []
@@ -108,10 +106,10 @@ export default class TripPointEditView extends ComponentView {
   }
 
   update(data) {
-    this._icon = data.icon;
     this._type = data.type;
     this._title = data.title;
-    this._time = data.time;
+    this._dateFrom = data.dateFrom;
+    this._dateTo = data.dateTo;
     this._price = data.price;
     this._isFavorite = data.isFavorite;
   }
@@ -121,7 +119,7 @@ export default class TripPointEditView extends ComponentView {
 
       this._offers.forEach((it) => {
         if (it.id === evt.target.id) {
-          it.isActive = !it.isActive;
+          it.accepted = !it.accepted;
         }
       });
     }
@@ -132,14 +130,19 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
 
-    this._element.querySelector(`.point__time .point__input`).flatpickr({
-      locale: {
-        rangeSeparator: ` — `
-      },
-      mode: `range`,
+    this._element.querySelector(`.point__time [name='date-start']`).flatpickr({
       enableTime: true,
-      dateFormat: `H:i`,
-      defaultDate: this._time
+      altInput: true,
+      altFormat: `H:i`,
+      dateFormat: `U`,
+      defaultDate: this._dateFrom
+    });
+    this._element.querySelector(`.point__time [name='date-end']`).flatpickr({
+      enableTime: true,
+      altInput: true,
+      altFormat: `H:i`,
+      dateFormat: `U`,
+      defaultDate: this._dateTo
     });
   }
 
@@ -160,7 +163,7 @@ export default class TripPointEditView extends ComponentView {
             </label>
       
             <div class="travel-way">
-              <label class="travel-way__label" for="travel-way__toggle">${this._icon}️</label>
+              <label class="travel-way__label" for="travel-way__toggle">${DATA.ICONS[this._type]}</label>
       
               <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
       
@@ -172,18 +175,10 @@ export default class TripPointEditView extends ComponentView {
                       id="travel-way-${key}"
                       name="travel-way"
                       value="${key}"
-                      ${DATA.ICONS[key] === this._icon ? `checked` : ``}
+                      ${key === this._type ? `checked` : ``}
                     >
                     <label class="travel-way__select-label" for="travel-way-${key}">${DATA.ICONS[key]} ${key}</label>
                   `).join(``)}
-                </div>
-      
-                <div class="travel-way__select-group">
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-                  <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-      
-                  <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-                  <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
                 </div>
               </div>
             </div>
@@ -197,16 +192,12 @@ export default class TripPointEditView extends ComponentView {
                 `)}
               </datalist>
             </div>
-      
-            <label class="point__time">
+            
+            <div class="point__time">
               choose time
-              <input class="point__input"
-                     type="text"
-                     name="time"
-                     placeholder="00:00 — 00:00"
-                     value="${this._time.start} — ${this._time.end}"
-              >
-            </label>
+              <input class="point__input" type="text" value="${this._dateFrom}" name="date-start" placeholder="19:00">
+              <input class="point__input" type="text" value="${this._dateTo}" name="date-end" placeholder="21:00">
+            </div>
       
             <label class="point__price">
               write price
@@ -230,16 +221,16 @@ export default class TripPointEditView extends ComponentView {
               <h3 class="point__details-title">offers</h3>
       
               <div class="point__offers-wrap">
-                ${this._offers.map((offer) => `
+                ${this._offers.map((offer, i) => `
                   <input class="point__offers-input visually-hidden"
                          type="checkbox"
                          name="offer"
-                         id="${offer.id}"
-                         value="${offer.name} + €${offer.price}"
-                         ${offer.isActive && `checked`}
+                         id="offer-${i}"
+                         value="${offer.title} + €${offer.price}"
+                         ${offer.accepted && `checked`}
                   >
-                  <label for="${offer.id}" class="point__offers-label">
-                    <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
+                  <label for="offer-${i}" class="point__offers-label">
+                    <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
                   </label>
                 `.trim()).join(``)}
               </div>      
@@ -250,7 +241,7 @@ export default class TripPointEditView extends ComponentView {
               <p class="point__destination-text">${this._description}</p>
               <div class="point__destination-images">
                 ${this._pictures.map((picture) => `
-                  <img src="${picture}" alt="picture from place" class="point__destination-image">
+                  <img src="${picture.src}" alt="${picture.description}" class="point__destination-image">
                 `.trim()).join(``)}
               </div>
             </section>
