@@ -2,29 +2,26 @@
 export default class TripModel {
   constructor(data) {
     this.id = data[`id`];
-    this.icon = data[`icon`];
     this.type = data[`type`];
-    this.title = data[`title`];
-    this.pictures = data[`pictures`];
+    this.title = data[`destination`][`name`];
+    this.description = data[`destination`][`description`];
+    this.pictures = data[`destination`][`pictures`];
     this.offers = data[`offers`];
-    this.description = data[`description`];
-    this.price = data[`price`];
-    this.time = data[`time`];
-    this.isFavorite = data[`isFavorite`];
+    this.price = data[`base_price`];
+    this.dateFrom = data[`date_from`];
+    this.dateTo = data[`date_to`];
+    this.isFavorite = Boolean(data[`is_favorite`]);
   }
 
   toRAW() {
     return {
       'id': this.id,
-      'icon': this.icon,
       'type': this.type,
-      'title': this.title,
-      'pictures': this.pictures,
       'offers': this.offers,
-      'description': this.description,
-      'price': this.price,
-      'time': this.time,
-      'isFavorite': this.isFavorite,
+      'base_price': this.price,
+      'date_from': this.dateFrom,
+      'date_to': this.dateTo,
+      'is_favorite': this.isFavorite,
     };
   }
 
