@@ -21,15 +21,15 @@ export default class API {
     this._authorization = authorization;
   }
 
-  getTrips() {
-    return this._load({url: `trips`})
+  getTripPoints() {
+    return this._load({url: `points`})
       .then((res) => res.json())
       .then(TripModel.parseTrips);
   }
 
-  createTrip() {}
+  createTripPoint() {}
 
-  updateTrip({id, data}) {
+  updateTripPoint({id, data}) {
     return this._load({
       url: `trips/${id}`,
       method: Method.PUT,
@@ -40,7 +40,7 @@ export default class API {
       .then(TripModel.parseTrip);
   }
 
-  deleteTrip({id}) {
+  deleteTripPoint({id}) {
     return this._load({url: `trips/${id}`, method: Method.DELETE});
   }
 
