@@ -213,7 +213,7 @@ export default class TripPointEditView extends ComponentView {
               <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination">
               <datalist id="destination-select">
                 ${DATA.PLACES.map((place) => `
-                  <option value="${place}"></option>
+                  <option value="${place.name}"></option>
                 `)}
               </datalist>
             </div>

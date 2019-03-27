@@ -1,5 +1,6 @@
 import {renderFilters, renderTripPoints} from './screens/trips-screen';
 import {filtersList} from './data/data';
+import {DATA} from './data/data';
 import Api from './api';
 import './menu';
 
@@ -18,3 +19,7 @@ export const fetchTripPoints = () => {
 };
 
 fetchTripPoints();
+
+api.getDestinations().then((data) => {
+  DATA.PLACES = data;
+});
