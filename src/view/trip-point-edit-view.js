@@ -59,7 +59,7 @@ export default class TripPointEditView extends ComponentView {
         target.isFavorite = value;
       },
       offer: (value) => {
-        target.offers.push(value);
+        target.activeOffers.push(value);
       }
     };
   }
@@ -72,7 +72,8 @@ export default class TripPointEditView extends ComponentView {
       dateTo: ``,
       price: ``,
       isFavorite: false,
-      offers: []
+      activeOffers: [],
+      offers: this._offers
     };
 
     const taskEditMapper = TripPointEditView.createMapper(entry);
@@ -109,6 +110,21 @@ export default class TripPointEditView extends ComponentView {
   }
 
   _onTypeChange(evt) {
+    const offers = DATA.OFFERS.find((obj) => obj.type === evt.target.value);
+
+    if (offers) {
+      offers.offers.forEach((obj) => {
+        if (obj.name) {
+          obj.title = obj.name;
+          obj.accepted = false;
+          delete obj.name;
+        }
+      });
+      this._offers = offers.offers;
+    } else {
+      this._offers = [];
+    }
+
     this._type = evt.target.value;
     this.unbind();
     this._partialUpdate();
@@ -147,7 +163,7 @@ export default class TripPointEditView extends ComponentView {
     if (evt.target.tagName.toLowerCase() === `input`) {
 
       this._offers.forEach((it) => {
-        if (it.id === evt.target.id) {
+        if (it.title === evt.target.attributes.label.value) {
           it.accepted = !it.accepted;
         }
       });
@@ -269,6 +285,7 @@ export default class TripPointEditView extends ComponentView {
                          type="checkbox"
                          name="offer"
                          id="offer-${i}"
+                         label="${offer.title}"
                          value="${offer.title} + €${offer.price}"
                          ${offer.accepted && `checked`}
                   >

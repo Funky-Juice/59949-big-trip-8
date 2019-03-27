@@ -342,6 +342,10 @@ input[type=radio]:checked + .trip-sorting__item {
   width: 230px;
 }
 
+.trip-point__offers li {
+  text-align: center;
+}
+
 .trip-point__offer {
   background: none;
   border: 0;

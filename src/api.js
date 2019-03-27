@@ -32,6 +32,11 @@ export default class API {
       .then((res) => res.json());
   }
 
+  getOffers() {
+    return this._load({url: `offers`})
+      .then((res) => res.json());
+  }
+
   createTripPoint() {}
 
   updateTripPoint({id, data}) {

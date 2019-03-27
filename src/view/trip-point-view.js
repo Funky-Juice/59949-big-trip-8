@@ -11,7 +11,7 @@ export default class TripPointView extends ComponentView {
     this._price = data.price;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
-    this._offers = [];
+    this._activeOffers = this._filterOffers(data.offers);
 
     this._onEdit = null;
     this._onPointClick = this._onPointClick.bind(this);
@@ -30,6 +30,17 @@ export default class TripPointView extends ComponentView {
     this._onEdit = fn;
   }
 
+  _filterOffers(offers) {
+    const tempArr = [];
+
+    offers.map((offer) => {
+      if (offer.accepted) {
+        tempArr.push(`${offer.title} + €${offer.price}`);
+      }
+    });
+    return tempArr;
+  }
+
   _onPointClick() {
     return typeof this._onEdit === `function` && this._onEdit();
   }
@@ -40,7 +51,7 @@ export default class TripPointView extends ComponentView {
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
     this._price = data.price;
-    this._offers = data.activeOffers;
+    this._activeOffers = data.activeOffers;
   }
 
   bind() {
@@ -65,7 +76,7 @@ export default class TripPointView extends ComponentView {
         </p>
         <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
         <ul class="trip-point__offers">
-          ${this._offers.map((offer) => `
+          ${this._activeOffers.map((offer) => `
             <li>
               <button class="trip-point__offer">${offer}</button>
             </li>

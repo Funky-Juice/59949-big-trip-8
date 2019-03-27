@@ -5,7 +5,7 @@ import Api from './api';
 import './menu';
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
-const API_URL = `https://es8-demo-srv.appspot.com/big-trip/`;
+const API_URL = `https://es8-demo-srv.appspot.com/big-trip`;
 
 export const api = new Api(API_URL, AUTHORIZATION);
 export let pointsData = [];
@@ -23,3 +23,8 @@ fetchTripPoints();
 api.getDestinations().then((data) => {
   DATA.PLACES = data;
 });
+
+api.getOffers().then((data) => {
+  DATA.OFFERS = data;
+});
+
