@@ -10,8 +10,8 @@ export default class TripPointEditView extends ComponentView {
     this._id = data.id;
     this._type = data.type;
     this._title = data.title;
-    this._pictures = data.pictures;
     this._offers = data.offers;
+    this._pictures = data.pictures;
     this._description = data.description;
     this._price = data.price;
     this._dateFrom = data.dateFrom;
@@ -27,6 +27,7 @@ export default class TripPointEditView extends ComponentView {
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
 
     this._onTypeChange = this._onTypeChange.bind(this);
+    this._onDestinationChange = this._onDestinationChange.bind(this);
   }
 
   set onSubmit(fn) {
@@ -114,6 +115,21 @@ export default class TripPointEditView extends ComponentView {
     this.bind();
   }
 
+  _onDestinationChange(evt) {
+    const place = DATA.PLACES.find((obj) => obj.name === evt.target.value);
+
+    if (!place) {
+      return;
+    }
+    this._title = place.name;
+    this._pictures = place.pictures;
+    this._description = place.description;
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
   _partialUpdate() {
     this._element.innerHTML = this.template;
   }
@@ -142,6 +158,7 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point form`).addEventListener(`submit`, this._onFormSubmit);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
+    this._element.querySelector(`input[name=destination]`).addEventListener(`change`, this._onDestinationChange);
 
     const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
     inputs.forEach((it) => {
@@ -169,6 +186,7 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onFormSubmit);
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onDeleteButtonClick);
+    this._element.querySelector(`input[name=destination]`).removeEventListener(`change`, this._onDestinationChange);
 
     const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
     inputs.forEach((it) => {
