@@ -25,6 +25,8 @@ export default class TripPointEditView extends ComponentView {
 
     this._onDelete = null;
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+
+    this._onTypeChange = this._onTypeChange.bind(this);
   }
 
   set onSubmit(fn) {
@@ -105,6 +107,17 @@ export default class TripPointEditView extends ComponentView {
     }
   }
 
+  _onTypeChange(evt) {
+    this._type = evt.target.value;
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
+  }
+
   update(data) {
     this._type = data.type;
     this._title = data.title;
@@ -130,6 +143,11 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
 
+    const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
+    inputs.forEach((it) => {
+      it.addEventListener(`change`, this._onTypeChange);
+    });
+
     this._element.querySelector(`.point__time [name='date-start']`).flatpickr({
       enableTime: true,
       altInput: true,
@@ -137,6 +155,7 @@ export default class TripPointEditView extends ComponentView {
       dateFormat: `U`,
       defaultDate: this._dateFrom
     });
+
     this._element.querySelector(`.point__time [name='date-end']`).flatpickr({
       enableTime: true,
       altInput: true,
@@ -150,10 +169,16 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onFormSubmit);
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onDeleteButtonClick);
+
+    const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
+    inputs.forEach((it) => {
+      it.removeEventListener(`change`, this._onTypeChange);
+    });
   }
 
   get template() {
     return `
+      <div>
       <article class="point">
         <form action="" method="get">
           <header class="point__header">
@@ -249,6 +274,7 @@ export default class TripPointEditView extends ComponentView {
           </section>
         </form>
       </article>
+      </div>
     `.trim();
   }
 }
