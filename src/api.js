@@ -41,7 +41,7 @@ export default class API {
 
   updateTripPoint({id, data}) {
     return this._load({
-      url: `trips/${id}`,
+      url: `points/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`})

@@ -50,17 +50,13 @@ export const renderTripPoints = (points) => {
       point.offers = newObject.offers;
       point.activeOffers = newObject.activeOffers;
 
-      tripPoint.update(point);
-      tripPoint.render();
-      tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
-      tripPointEdit.unrender();
-      // api.updateTripPoint({id: point.id, data: point.toRAW()})
-      //   .then((newPoint) => {
-      //     tripPoint.update(newPoint);
-      //     tripPoint.render();
-      //     tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
-      //     tripPointEdit.unrender();
-      //   });
+      api.updateTripPoint({id: point.id, data: point.toRAW()})
+        .then((newPoint) => {
+          tripPoint.update(newPoint);
+          tripPoint.render();
+          tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+          tripPointEdit.unrender();
+        });
     };
 
     tripPointEdit.onDelete = (id) => {

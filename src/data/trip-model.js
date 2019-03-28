@@ -22,6 +22,9 @@ export default class TripModel {
       'date_from': this.dateFrom,
       'date_to': this.dateTo,
       'is_favorite': this.isFavorite,
+      'destination': {
+        'name': this.title
+      }
     };
   }
 

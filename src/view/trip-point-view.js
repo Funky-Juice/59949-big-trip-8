@@ -51,7 +51,7 @@ export default class TripPointView extends ComponentView {
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
     this._price = data.price;
-    this._activeOffers = data.activeOffers;
+    this._activeOffers = this._filterOffers(data.offers);
   }
 
   bind() {
