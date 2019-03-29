@@ -51,7 +51,7 @@ export default class API {
   }
 
   deleteTripPoint({id}) {
-    return this._load({url: `trips/${id}`, method: Method.DELETE});
+    return this._load({url: `points/${id}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
