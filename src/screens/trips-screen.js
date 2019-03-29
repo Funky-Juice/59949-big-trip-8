@@ -50,18 +50,35 @@ export const renderTripPoints = (points) => {
       point.offers = newObject.offers;
       point.activeOffers = newObject.activeOffers;
 
+      tripPointEdit.block(`save`);
+      tripPointEdit.showBorder();
+
       api.updateTripPoint({id: point.id, data: point.toRAW()})
         .then((newPoint) => {
+          tripPointEdit.unblock();
           tripPoint.update(newPoint);
           tripPoint.render();
           tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
           tripPointEdit.unrender();
+        })
+        .catch(() => {
+          tripPointEdit.shake();
+          tripPointEdit.unblock();
+          tripPointEdit.showBorder(true);
         });
     };
 
     tripPointEdit.onDelete = (id) => {
+      tripPointEdit.block();
+      tripPointEdit.showBorder();
+
       api.deleteTripPoint(id)
-        .then(() => fetchTripPoints());
+        .then(() => fetchTripPoints())
+        .catch(() => {
+          tripPointEdit.shake();
+          tripPointEdit.unblock();
+          tripPointEdit.showBorder(true);
+        });
     };
   });
 };

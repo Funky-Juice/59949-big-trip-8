@@ -28,6 +28,10 @@ export default class TripPointEditView extends ComponentView {
 
     this._onTypeChange = this._onTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+
+    this._saveBtn = null;
+    this._deleteBtn = null;
+    this._pointWrapper = null;
   }
 
   set onSubmit(fn) {
@@ -196,6 +200,10 @@ export default class TripPointEditView extends ComponentView {
       dateFormat: `U`,
       defaultDate: this._dateTo
     });
+
+    this._saveBtn = this._element.querySelector(`.point__button--save`);
+    this._deleteBtn = this._element.querySelector(`.point__button--delete`);
+    this._pointWrapper = this._element.querySelector(`article.point`);
   }
 
   unbind() {
@@ -208,6 +216,42 @@ export default class TripPointEditView extends ComponentView {
     inputs.forEach((it) => {
       it.removeEventListener(`change`, this._onTypeChange);
     });
+  }
+
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+    }, ANIMATION_TIMEOUT);
+  }
+
+  block(method) {
+    this._saveBtn.disabled = true;
+    this._deleteBtn.disabled = true;
+
+    if (method === `save`) {
+      this._saveBtn.innerText = `Saving...`;
+    } else {
+      this._deleteBtn.innerText = `Deleting...`;
+    }
+  }
+
+  unblock() {
+    this._saveBtn.disabled = false;
+    this._deleteBtn.disabled = false;
+
+    this._saveBtn.innerText = `Save`;
+    this._deleteBtn.innerText = `Delete`;
+  }
+
+  showBorder(isShown) {
+    if (isShown) {
+      this._pointWrapper.style.border = `1px solid red`;
+    } else {
+      this._pointWrapper.style.border = `none`;
+    }
   }
 
   get template() {
