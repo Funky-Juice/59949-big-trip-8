@@ -1,4 +1,7 @@
 import TripModel from './data/trip-model';
+import {showError} from './utils';
+
+const messageContainer = document.querySelector(`.message-container`);
 
 const Method = {
   GET: `GET`,
@@ -60,8 +63,7 @@ export default class API {
     return fetch(`${this._api}/${url}`, {method, body, headers})
       .then(checkStatus)
       .catch((err) => {
-        // eslint-disable-next-line
-        console.error(`fetch error: ${err}`);
+        showError(messageContainer);
         throw err;
       });
   }

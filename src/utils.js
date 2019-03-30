@@ -169,3 +169,18 @@ export const chartsDataAdapter = (points, data) => {
     transport: transportAmount
   };
 };
+
+export const showBlock = (container) => {
+  container.classList.remove(`visually-hidden`);
+};
+
+export const hideBlock = (container) => {
+  container.classList.add(`visually-hidden`);
+};
+
+export const showError = (container) => {
+  container.classList.remove(`visually-hidden`);
+  container.innerText = `
+    Something went wrong while loading your route info.
+    Check your connection or try again later.`;
+};
