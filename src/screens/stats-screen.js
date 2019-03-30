@@ -2,14 +2,13 @@ import moneyChart from '../charts/money-chart';
 import transportChart from '../charts/transport-chart';
 import {chartsDataAdapter} from '../utils';
 import {DATA} from '../data/data';
-import {pointsData} from '../main';
 
 
 let moneyChartLink;
 let transportChartLink;
 
-export const renderCharts = () => {
-  const chartsData = chartsDataAdapter(pointsData, DATA);
+export const renderCharts = (data) => {
+  const chartsData = chartsDataAdapter(data, DATA);
 
   moneyChartLink = moneyChart(chartsData);
   transportChartLink = transportChart(chartsData);

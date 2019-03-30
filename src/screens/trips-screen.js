@@ -2,7 +2,7 @@ import TripPointView from '../view/trip-point-view';
 import TripPointEditView from '../view/trip-point-edit-view';
 import FilterView from '../view/filter-view';
 import {filterPoints} from '../utils';
-import {api, fetchTripPoints} from '../main';
+import {api} from '../main';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
@@ -73,7 +73,7 @@ export const renderTripPoints = (points) => {
       tripPointEdit.showBorder();
 
       api.deleteTripPoint(id)
-        .then(() => fetchTripPoints())
+        .then(() => tripPointEdit.unrender())
         .catch(() => {
           tripPointEdit.shake();
           tripPointEdit.unblock();

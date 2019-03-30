@@ -8,17 +8,10 @@ const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const API_URL = `https://es8-demo-srv.appspot.com/big-trip`;
 
 export const api = new Api(API_URL, AUTHORIZATION);
-export let pointsData = [];
 
 export const fetchTripPoints = () => {
-  api.getTripPoints().then((trips) => {
-    pointsData = trips;
-    renderFilters(filtersList, pointsData);
-    renderTripPoints(pointsData);
-  });
+  return api.getTripPoints();
 };
-
-fetchTripPoints();
 
 api.getDestinations().then((data) => {
   DATA.PLACES = data;
@@ -27,4 +20,10 @@ api.getDestinations().then((data) => {
 api.getOffers().then((data) => {
   DATA.OFFERS = data;
 });
+
+fetchTripPoints()
+  .then((data) => {
+    renderFilters(filtersList, data);
+    renderTripPoints(data);
+  });
 
