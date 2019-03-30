@@ -10,9 +10,9 @@ export default class TripPointEditView extends ComponentView {
     this._id = data.id;
     this._type = data.type;
     this._title = data.title;
+    this._pictures = this._getPlace(data.title).pictures;
+    this._description = this._getPlace(data.title).description;
     this._offers = data.offers;
-    this._pictures = data.pictures;
-    this._description = data.description;
     this._price = data.price;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
@@ -40,6 +40,11 @@ export default class TripPointEditView extends ComponentView {
 
   set onDelete(fn) {
     this._onDelete = fn;
+  }
+
+  _getPlace(name) {
+    const place = DATA.PLACES.find((obj) => obj.name === name);
+    return place;
   }
 
   static createMapper(target) {
