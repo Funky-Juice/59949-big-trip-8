@@ -26,9 +26,6 @@ export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
 
   points.forEach((point) => {
-    if (point.isDeleted) {
-      return;
-    }
     const tripPoint = new TripPointView(point);
     const tripPointEdit = new TripPointEditView(point);
 
