@@ -6,7 +6,11 @@ export default class Provider {
   }
 
   getTripPoints() {
-    return this._api.getTripPoints();
+    return this._api.getTripPoints()
+      .then((points) => {
+        points.map((it) => this._store.setItem({key: it.id, item: it.toRAW()}));
+        return points;
+      });
   }
 
   getDestinations() {
@@ -17,15 +21,22 @@ export default class Provider {
     return this._api.getOffers();
   }
 
-  updateTripPoint({id, data}) {
-    return this._api.updateTripPoint({id, data});
-  }
-
   createTripPoint({data}) {
     return this._api.createTripPoint({data});
   }
 
+  updateTripPoint({id, data}) {
+    return this._api.updateTripPoint({id, data})
+      .then((point) => {
+        this._store.setItem({key: point.id, item: point.toRAW()});
+        return point;
+      });
+  }
+
   deleteTripPoint({id}) {
-    return this._api.deleteTripPoint({id});
+    return this._api.deleteTripPoint({id})
+      .then(() => {
+        this._store.removeItem({key: id});
+      });
   }
 }
