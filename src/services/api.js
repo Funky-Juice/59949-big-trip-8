@@ -27,8 +27,7 @@ export default class API {
 
   getTripPoints() {
     return this._load({url: `points`})
-      .then((res) => res.json())
-      .then(TripModel.parseTrips);
+      .then((res) => res.json());
   }
 
   getDestinations() {

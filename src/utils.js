@@ -39,6 +39,10 @@ const objEntriesToObj = (objEntries) => {
   return tempObj;
 };
 
+export const objectToArray = (obj) => {
+  return Object.keys(obj).map((id) => obj[id]);
+};
+
 const sortObjValues = (obj) => {
   return Object.entries(obj).sort((a, b) => b[1] - a[1]);
 };

@@ -1,56 +1,89 @@
+import TripModel from '../data/trip-model';
+import {objectToArray} from '../utils';
+import {DATA} from '../data/data';
+
 
 export default class Provider {
   constructor({api, store}) {
     this._api = api;
     this._store = store;
+    this._needSync = false;
+  }
+
+  _isOnline() {
+    return window.navigator.onLine;
   }
 
   getTripPoints() {
-    return this._api.getTripPoints()
-      .then((points) => {
-        let pointsObj = {};
+    if (this._isOnline()) {
+      return this._api.getTripPoints()
+        .then((points) => {
+          let pointsObj = {};
 
-        points.forEach((it) => {
-          if (it.id) {
-            pointsObj[it.id] = it;
-          }
+          points.forEach((it) => {
+            if (it.id) {
+              pointsObj[it.id] = it;
+            }
+          });
+
+          this._store.setItems({items: pointsObj, storeKey: `points`});
+          return TripModel.parseTrips(points);
         });
+    } else {
+      const pointsMap = this._store.getAll({storeKey: `points`});
+      const rawPoints = objectToArray(pointsMap);
+      const points = TripModel.parseTrips(rawPoints);
 
-        this._store.setItems({items: pointsObj, storeKey: `points`});
-        return points;
-      });
+      return Promise.resolve(points);
+    }
   }
 
   getDestinations() {
-    return this._api.getDestinations()
-      .then((destinations) => {
-        let destinationsObj = {};
+    if (this._isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          let destinationsObj = {};
 
-        destinations.forEach((it)=> {
-          if (it.name) {
-            destinationsObj[it.name] = it;
-          }
+          destinations.forEach((it) => {
+            if (it.name) {
+              destinationsObj[it.name] = it;
+            }
+          });
+
+          this._store.setItems({items: destinationsObj, storeKey: `destinations`});
+          return destinations;
         });
+    } else {
+      const destinationsMap = this._store.getAll({storeKey: `destinations`});
+      const destinations = objectToArray(destinationsMap);
+      DATA.OFFERS = destinations;
 
-        this._store.setItems({items: destinationsObj, storeKey: `destinations`});
-        return destinations;
-      });
+      return Promise.resolve(destinations);
+    }
   }
 
   getOffers() {
-    return this._api.getOffers()
-      .then((offers) => {
-        let offersObj = {};
+    if (this._isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          let offersObj = {};
 
-        offers.forEach((it)=> {
-          if (it.type) {
-            offersObj[it.type] = it;
-          }
+          offers.forEach((it) => {
+            if (it.type) {
+              offersObj[it.type] = it;
+            }
+          });
+
+          this._store.setItems({items: offersObj, storeKey: `offers`});
+          return offers;
         });
+    } else {
+      const offersMap = this._store.getAll({storeKey: `offers`});
+      const offers = objectToArray(offersMap);
+      DATA.OFFERS = offers;
 
-        this._store.setItems({items: offersObj, storeKey: `offers`});
-        return offers;
-      });
+      return Promise.resolve(offers);
+    }
   }
 
   createTripPoint({data}) {
@@ -58,17 +91,31 @@ export default class Provider {
   }
 
   updateTripPoint({id, data}) {
-    return this._api.updateTripPoint({id, data})
-      .then((point) => {
-        this._store.setItem({key: point.id, item: point.toRAW(), storeKey: `points`});
-        return point;
-      });
+    console.log(data);
+    if (this._isOnline()) {
+      return this._api.updateTripPoint({id, data})
+        .then((point) => {
+          this._store.setItem({key: point.id, item: point.toRAW(), storeKey: `points`});
+          return point;
+        });
+    } else {
+      const point = data;
+      this._needSync = true;
+      this._store.setItem({key: point.id, item: point, storeKey: `points`});
+      return Promise.resolve(TripModel.parseTrip(point));
+    }
   }
 
   deleteTripPoint({id}) {
-    return this._api.deleteTripPoint({id})
-      .then(() => {
-        this._store.removeItem({key: id, storeKey: `points`});
-      });
+    if (this._isOnline()) {
+      return this._api.deleteTripPoint({id})
+        .then(() => {
+          this._store.removeItem({key: id, storeKey: `points`});
+        });
+    } else {
+      this._needSync = true;
+      this._store.removeItem({key: id, storeKey: `points`});
+      return Promise.resolve(true);
+    }
   }
 }
