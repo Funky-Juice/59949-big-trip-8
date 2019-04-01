@@ -1,5 +1,5 @@
-import TripModel from './data/trip-model';
-import {showError} from './utils';
+import TripModel from '../data/trip-model';
+import {showError} from '../utils';
 
 const messageContainer = document.querySelector(`.message-container`);
 

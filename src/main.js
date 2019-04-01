@@ -2,7 +2,8 @@ import {renderFilters, renderTripPoints} from './screens/trips-screen';
 import {filtersList} from './data/data';
 import {DATA} from './data/data';
 import {showBlock, hideBlock} from './utils';
-import Api from './api';
+import Provider from './services/provider';
+import Api from './services/api';
 import './menu';
 
 
@@ -12,15 +13,17 @@ const messageContainer = document.querySelector(`.message-container`);
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const API_URL = `https://es8-demo-srv.appspot.com/big-trip`;
 
-export const api = new Api(API_URL, AUTHORIZATION);
+const api = new Api(API_URL, AUTHORIZATION);
+const storage = {};
+export const provider = new Provider({api, storage});
 
 export const fetchTripPoints = () => {
   return Promise.all([
-    api.getTripPoints(),
-    api.getDestinations().then((data) => {
+    provider.getTripPoints(),
+    provider.getDestinations().then((data) => {
       DATA.PLACES = data;
     }),
-    api.getOffers().then((data) => {
+    provider.getOffers().then((data) => {
       DATA.OFFERS = data;
     })
   ]);
