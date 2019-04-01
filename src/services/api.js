@@ -1,5 +1,6 @@
 import TripModel from '../data/trip-model';
 import {showError} from '../utils';
+import {DATA} from '../data/data';
 
 const messageContainer = document.querySelector(`.message-container`);
 
@@ -32,12 +33,14 @@ export default class API {
 
   getDestinations() {
     return this._load({url: `destinations`})
-      .then((res) => res.json());
+      .then((res) => res.json())
+      .then((data) => (DATA.PLACES = data));
   }
 
   getOffers() {
     return this._load({url: `offers`})
-      .then((res) => res.json());
+      .then((res) => res.json())
+      .then((data) => (DATA.OFFERS = data));
   }
 
   createTripPoint() {}

@@ -13,22 +13,23 @@ const messageContainer = document.querySelector(`.message-container`);
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const API_URL = `https://es8-demo-srv.appspot.com/big-trip`;
-const TRIPS_STORE_KEY = `trips-store-key`;
+
+const STORE_KEYS = {
+  'points': `points-store-key`,
+  'destinations': `destinations-store-key`,
+  'offers': `offers-store-key`,
+};
 
 const api = new Api(API_URL, AUTHORIZATION);
-const store = new Store({key: TRIPS_STORE_KEY, storage: localStorage});
+const store = new Store({key: STORE_KEYS, storage: localStorage});
 export const provider = new Provider({api, store});
 
 
 export const fetchTripPoints = () => {
   return Promise.all([
     provider.getTripPoints(),
-    provider.getDestinations().then((data) => {
-      DATA.PLACES = data;
-    }),
-    provider.getOffers().then((data) => {
-      DATA.OFFERS = data;
-    })
+    provider.getDestinations(),
+    provider.getOffers()
   ]);
 };
 

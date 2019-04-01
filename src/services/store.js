@@ -6,32 +6,35 @@ export default class Store {
     this._storage = storage;
   }
 
-  setItem({key, item}) {
-    const items = this.getAll();
-    items[key] = item;
-
-    this._storage.setItem(this._storeKey, JSON.stringify(items));
+  setItems({items, storeKey}) {
+    this._storage.setItem(this._storeKey[storeKey], JSON.stringify(items));
   }
 
-  getItem({key}) {
-    const items = this.getAll();
+  setItem({key, item, storeKey}) {
+    let items = {};
+
+    if (this.getAll({storeKey: [storeKey]}) !== null) {
+      items = this.getAll({storeKey: [storeKey]});
+    }
+    items[key] = item;
+    this._storage.setItem(this._storeKey[storeKey], JSON.stringify(items));
+  }
+
+  getItem({key, storeKey}) {
+    const items = this.getAll({storeKey: [storeKey]});
     return items[key];
   }
 
-  removeItem({key}) {
-    const items = this.getAll();
+  removeItem({key, storeKey}) {
+    const items = this.getAll({storeKey: [storeKey]});
     delete items[key];
 
-    this._storage.setItem(this._storeKey, JSON.stringify(items));
+    this._storage.setItem(this._storeKey[storeKey], JSON.stringify(items));
   }
 
-  getAll() {
+  getAll({storeKey}) {
     const emptyItems = {};
-    const items = this._storage.getItem(this._storeKey);
-
-    if (!items) {
-      return emptyItems;
-    }
+    const items = this._storage.getItem(this._storeKey[storeKey]);
 
     try {
       return JSON.parse(items);
