@@ -2,7 +2,7 @@ import TripPointView from '../view/trip-point-view';
 import TripPointEditView from '../view/trip-point-edit-view';
 import FilterView from '../view/filter-view';
 import {filterPoints} from '../utils';
-import {api} from '../main';
+import {provider} from '../main';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
@@ -50,7 +50,7 @@ export const renderTripPoints = (points) => {
       tripPointEdit.block(`save`);
       tripPointEdit.showBorder();
 
-      api.updateTripPoint({id: point.id, data: point.toRAW()})
+      provider.updateTripPoint({id: point.id, data: point.toRAW()})
         .then((newPoint) => {
           tripPointEdit.unblock();
           tripPoint.update(newPoint);
@@ -69,7 +69,7 @@ export const renderTripPoints = (points) => {
       tripPointEdit.block();
       tripPointEdit.showBorder();
 
-      api.deleteTripPoint(id)
+      provider.deleteTripPoint(id)
         .then(() => tripPointEdit.unrender())
         .catch(() => {
           tripPointEdit.shake();

@@ -1,8 +1,9 @@
 import {renderFilters, renderTripPoints} from './screens/trips-screen';
 import {filtersList} from './data/data';
-import {DATA} from './data/data';
 import {showBlock, hideBlock} from './utils';
-import Api from './api';
+import Provider from './services/provider';
+import Api from './services/api';
+import Store from './services/store';
 import './menu';
 
 
@@ -12,17 +13,27 @@ const messageContainer = document.querySelector(`.message-container`);
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const API_URL = `https://es8-demo-srv.appspot.com/big-trip`;
 
-export const api = new Api(API_URL, AUTHORIZATION);
+const STORE_KEYS = {
+  'points': `points-store-key`,
+  'destinations': `destinations-store-key`,
+  'offers': `offers-store-key`,
+};
+
+const api = new Api(API_URL, AUTHORIZATION);
+const store = new Store({key: STORE_KEYS, storage: localStorage});
+export const provider = new Provider({api, store});
+
+window.addEventListener(`offline`, () => (document.title = `${document.title} [OFFLINE]`));
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(`[OFFLINE]`)[0];
+  provider.syncPoints();
+});
 
 export const fetchTripPoints = () => {
   return Promise.all([
-    api.getTripPoints(),
-    api.getDestinations().then((data) => {
-      DATA.PLACES = data;
-    }),
-    api.getOffers().then((data) => {
-      DATA.OFFERS = data;
-    })
+    provider.getTripPoints(),
+    provider.getDestinations(),
+    provider.getOffers()
   ]);
 };
 

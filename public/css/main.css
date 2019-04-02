@@ -385,6 +385,7 @@ input[type=radio]:checked + .trip-sorting__item {
  border-bottom: 1px solid #0D8AE4;
 }
 .point {
+  max-width: 937px;
   padding: 15px 0;
   background-color: #ffffff;
   border-radius: 23px;

@@ -1,5 +1,6 @@
-import TripModel from './data/trip-model';
-import {showError} from './utils';
+import TripModel from '../data/trip-model';
+import {showError} from '../utils';
+import {DATA} from '../data/data';
 
 const messageContainer = document.querySelector(`.message-container`);
 
@@ -26,18 +27,19 @@ export default class API {
 
   getTripPoints() {
     return this._load({url: `points`})
-      .then((res) => res.json())
-      .then(TripModel.parseTrips);
+      .then((res) => res.json());
   }
 
   getDestinations() {
     return this._load({url: `destinations`})
-      .then((res) => res.json());
+      .then((res) => res.json())
+      .then((data) => (DATA.PLACES = data));
   }
 
   getOffers() {
     return this._load({url: `offers`})
-      .then((res) => res.json());
+      .then((res) => res.json())
+      .then((data) => (DATA.OFFERS = data));
   }
 
   createTripPoint() {}
@@ -55,6 +57,16 @@ export default class API {
 
   deleteTripPoint({id}) {
     return this._load({url: `points/${id}`, method: Method.DELETE});
+  }
+
+  syncPoints({points}) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(points),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((res) => res.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
