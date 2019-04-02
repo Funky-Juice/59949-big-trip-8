@@ -14,6 +14,10 @@ export default class Provider {
     return window.navigator.onLine;
   }
 
+  syncPoints() {
+    return this._api.syncPoints({points: objectToArray(this._store.getAll({storeKey: `points`}))});
+  }
+
   getTripPoints() {
     if (this._isOnline()) {
       return this._api.getTripPoints()
@@ -91,7 +95,6 @@ export default class Provider {
   }
 
   updateTripPoint({id, data}) {
-    console.log(data);
     if (this._isOnline()) {
       return this._api.updateTripPoint({id, data})
         .then((point) => {
