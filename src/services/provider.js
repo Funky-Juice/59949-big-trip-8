@@ -60,7 +60,7 @@ export default class Provider {
     } else {
       const destinationsMap = this._store.getAll({storeKey: `destinations`});
       const destinations = objectToArray(destinationsMap);
-      DATA.OFFERS = destinations;
+      DATA.PLACES = destinations;
 
       return Promise.resolve(destinations);
     }
