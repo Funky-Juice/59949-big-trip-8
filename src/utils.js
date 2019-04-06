@@ -25,6 +25,14 @@ export const filterPoints = (points, filterName) => {
   }
 };
 
+export const sortPoints = (points, sortingName) => {
+
+  switch (sortingName) {
+    default:
+      return points;
+  }
+};
+
 const objEntriesToObj = (objEntries) => {
   const tempObj = {
     labels: [],

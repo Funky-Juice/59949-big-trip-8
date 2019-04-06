@@ -21,3 +21,10 @@ export const filtersList = [
   {name: `future`},
   {name: `past`}
 ];
+
+export const sortingsList = [
+  {name: `event`},
+  {name: `time`},
+  {name: `price`},
+  {name: `offers`}
+];

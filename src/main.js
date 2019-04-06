@@ -1,5 +1,5 @@
-import {renderFilters, renderTripPoints} from './screens/trips-screen';
-import {filtersList} from './data/data';
+import {renderFilters, renderSortings, renderTripPoints} from './screens/trips-screen';
+import {filtersList, sortingsList} from './data/data';
 import {showBlock, hideBlock} from './utils';
 import Provider from './services/provider';
 import Api from './services/api';
@@ -43,5 +43,6 @@ fetchTripPoints()
     showBlock(contentContainer);
 
     renderFilters(filtersList, data[0]);
+    renderSortings(sortingsList, data[0]);
     renderTripPoints(data[0]);
   });

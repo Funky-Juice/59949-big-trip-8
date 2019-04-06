@@ -1,11 +1,13 @@
 import TripPointView from '../view/trip-point-view';
 import TripPointEditView from '../view/trip-point-edit-view';
 import FilterView from '../view/filter-view';
-import {filterPoints} from '../utils';
+import SortingView from '../view/sorting-view';
+import {filterPoints, sortPoints} from '../utils';
 import {provider} from '../main';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
+const sortingsContainer = document.querySelector(`.trip-sorting`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
 
 export const renderFilters = (filters, points) => {
@@ -18,6 +20,20 @@ export const renderFilters = (filters, points) => {
     filterComponent.onFilter = () => {
       const filteredPoints = filterPoints(points, filterComponent.name);
       renderTripPoints(filteredPoints);
+    };
+  });
+};
+
+export const renderSortings = (sortings, points) => {
+  sortingsContainer.innerHTML = ``;
+
+  sortings.forEach((sorting) => {
+    const sortingComponent = new SortingView(sorting);
+    sortingsContainer.appendChild(sortingComponent.render());
+
+    sortingComponent.onSort = () => {
+      const sortedPoints = sortPoints(points, sortingComponent.name);
+      renderTripPoints(sortedPoints);
     };
   });
 };
