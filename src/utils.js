@@ -15,10 +15,10 @@ export const filterPoints = (points, filterName) => {
       return points;
 
     case `future`:
-      return points.filter((it) => it.time > Date.now());
+      return points.filter((it) => it.dateFrom > Date.now());
 
     case `past`:
-      return points.filter((it) => it.time < Date.now());
+      return points.filter((it) => it.dateTo < Date.now());
 
     default:
       return points;
