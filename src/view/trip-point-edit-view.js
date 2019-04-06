@@ -94,6 +94,7 @@ export default class TripPointEditView extends ComponentView {
         taskEditMapper[property](value);
       }
     }
+    entry.duration = entry.dateTo - entry.dateFrom;
 
     return entry;
   }

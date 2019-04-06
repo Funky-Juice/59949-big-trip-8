@@ -28,6 +28,13 @@ export const filterPoints = (points, filterName) => {
 export const sortPoints = (points, sortingName) => {
 
   switch (sortingName) {
+    case `event`:
+      return points;
+
+    case `time`:
+      const newArr = Array.from(points);
+      return newArr.sort((a, b) => b.duration - a.duration);
+
     default:
       return points;
   }

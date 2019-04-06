@@ -58,6 +58,7 @@ export const renderTripPoints = (points) => {
       point.title = newObject.title;
       point.dateFrom = newObject.dateFrom;
       point.dateTo = newObject.dateTo;
+      point.duration = newObject.duration;
       point.price = newObject.price;
       point.isFavorite = newObject.isFavorite;
       point.offers = newObject.offers;

@@ -11,6 +11,7 @@ export default class TripPointView extends ComponentView {
     this._price = data.price;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
+    this._duration = data.duration;
     this._activeOffers = this._filterOffers(data.offers);
 
     this._onEdit = null;
@@ -18,7 +19,7 @@ export default class TripPointView extends ComponentView {
   }
 
   get duration() {
-    const diff = this._dateTo - this._dateFrom;
+    const diff = this._duration;
     const hours = Math.floor(moment.duration(diff).asHours());
     const minutes = moment.utc(diff).format(`mm`);
     const time = `${hours}h ${minutes}m`;
@@ -50,6 +51,7 @@ export default class TripPointView extends ComponentView {
     this._title = data.title;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
+    this._duration = data.duration;
     this._price = data.price;
     this._activeOffers = this._filterOffers(data.offers);
   }
