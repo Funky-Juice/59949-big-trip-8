@@ -23,6 +23,9 @@ export default class SortingView extends ComponentView {
   }
 
   bind() {
+    if (this._name === `offers`) {
+      return;
+    }
     this._element.querySelector(`.trip-sorting__item`).addEventListener(`click`, this._onSortClick);
   }
 
@@ -38,6 +41,7 @@ export default class SortingView extends ComponentView {
              id="sorting-${this._name}"
              value="${this._name}"
              ${this._name === `event` && `checked`}
+             ${this._name === `offers` && `disabled`}
       >
       <label class="trip-sorting__item trip-sorting__item--${this._name}" for="sorting-${this._name}">${this._name}</label>
     </div>`.trim();

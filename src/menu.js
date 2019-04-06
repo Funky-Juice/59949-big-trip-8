@@ -1,7 +1,7 @@
 import {renderCharts, destroyCharts} from './screens/stats-screen';
-import {renderFilters, renderTripPoints} from './screens/trips-screen';
+import {renderFilters, renderSortings, renderTripPoints} from './screens/trips-screen';
 import {fetchTripPoints} from './main';
-import {filtersList} from './data/data';
+import {filtersList, sortingsList} from './data/data';
 import {showBlock, hideBlock} from './utils';
 
 
@@ -40,6 +40,7 @@ pointsBtn.addEventListener(`click`, () => {
     .then((data) => {
       showBlock(pointsContainer);
       renderFilters(filtersList, data[0]);
+      renderSortings(sortingsList, data[0]);
       renderTripPoints(data[0]);
     });
 });

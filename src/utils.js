@@ -35,6 +35,9 @@ export const sortPoints = (points, sortingName) => {
       const newArr = Array.from(points);
       return newArr.sort((a, b) => b.duration - a.duration);
 
+    case `price`:
+      return Array.from(points).sort((a, b) => b.price - a.price);
+
     default:
       return points;
   }
