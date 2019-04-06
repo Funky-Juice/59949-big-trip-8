@@ -4,13 +4,14 @@ import FilterView from '../view/filter-view';
 import SortingView from '../view/sorting-view';
 import {filterPoints, sortPoints} from '../utils';
 import {provider} from '../main';
+import {DATA} from '../data/data';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const sortingsContainer = document.querySelector(`.trip-sorting`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
 
-export const renderFilters = (filters, points) => {
+export const renderFilters = (filters) => {
   filtersContainer.innerHTML = ``;
 
   filters.forEach((filter) => {
@@ -18,13 +19,13 @@ export const renderFilters = (filters, points) => {
     filtersContainer.appendChild(filterComponent.render());
 
     filterComponent.onFilter = () => {
-      const filteredPoints = filterPoints(points, filterComponent.name);
+      const filteredPoints = filterPoints(DATA.POINTS, filterComponent.name);
       renderTripPoints(filteredPoints);
     };
   });
 };
 
-export const renderSortings = (sortings, points) => {
+export const renderSortings = (sortings) => {
   sortingsContainer.innerHTML = ``;
 
   sortings.forEach((sorting) => {
@@ -32,7 +33,7 @@ export const renderSortings = (sortings, points) => {
     sortingsContainer.appendChild(sortingComponent.render());
 
     sortingComponent.onSort = () => {
-      const sortedPoints = sortPoints(points, sortingComponent.name);
+      const sortedPoints = sortPoints(DATA.POINTS, sortingComponent.name);
       renderTripPoints(sortedPoints);
     };
   });
@@ -87,7 +88,10 @@ export const renderTripPoints = (points) => {
       tripPointEdit.showBorder();
 
       provider.deleteTripPoint(id)
-        .then(() => tripPointEdit.unrender())
+        .then(() => {
+          DATA.POINTS = DATA.POINTS.filter((obj) => obj.id !== id.id);
+          tripPointEdit.unrender();
+        })
         .catch(() => {
           tripPointEdit.shake();
           tripPointEdit.unblock();

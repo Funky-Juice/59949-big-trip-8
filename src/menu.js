@@ -1,7 +1,7 @@
 import {renderCharts, destroyCharts} from './screens/stats-screen';
 import {renderFilters, renderSortings, renderTripPoints} from './screens/trips-screen';
 import {fetchTripPoints} from './main';
-import {filtersList, sortingsList} from './data/data';
+import {DATA, filtersList, sortingsList} from './data/data';
 import {showBlock, hideBlock} from './utils';
 
 
@@ -22,9 +22,10 @@ statsBtn.addEventListener(`click`, () => {
 
   destroyCharts();
   fetchTripPoints()
-    .then((data) => {
+    .then((data) => (DATA.POINTS = data[0]))
+    .then(() => {
       showBlock(statisticContainer);
-      renderCharts(data[0]);
+      renderCharts(DATA.POINTS);
     });
 });
 
@@ -37,10 +38,11 @@ pointsBtn.addEventListener(`click`, () => {
   statsBtn.classList.remove(`view-switch__item--active`);
 
   fetchTripPoints()
-    .then((data) => {
+    .then((data) => (DATA.POINTS = data[0]))
+    .then(() => {
       showBlock(pointsContainer);
-      renderFilters(filtersList, data[0]);
-      renderSortings(sortingsList, data[0]);
-      renderTripPoints(data[0]);
+      renderFilters(filtersList);
+      renderSortings(sortingsList);
+      renderTripPoints(DATA.POINTS);
     });
 });

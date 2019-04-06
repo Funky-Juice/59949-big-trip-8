@@ -1,5 +1,6 @@
 
 export const DATA = {
+  POINTS: [],
   PLACES: [],
   OFFERS: [],
   ICONS: {
