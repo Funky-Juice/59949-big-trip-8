@@ -3,14 +3,18 @@ import {renderFilters, renderSortings, renderTripPoints} from './screens/trips-s
 import {fetchTripPoints} from './main';
 import {DATA, filtersList, sortingsList} from './data/data';
 import {showBlock, hideBlock} from './utils';
+import TripPointCreateView from './view/trip-point-create-view';
 
+const tripPointCreate = new TripPointCreateView();
 
 const pointsContainer = document.getElementById(`table`);
 const statisticContainer = document.querySelector(`.statistic`);
 const messageContainer = document.querySelector(`.message-container`);
+const pointCreateContainer = document.querySelector(`.point-create-form-wrapper`);
 
 const pointsBtn = document.getElementById(`table-nav-btn`);
 const statsBtn = document.getElementById(`stats-nav-btn`);
+const newEventBtn = document.querySelector(`.trip-controls__new-event`);
 
 
 statsBtn.addEventListener(`click`, () => {
@@ -46,3 +50,14 @@ pointsBtn.addEventListener(`click`, () => {
       renderTripPoints(DATA.POINTS);
     });
 });
+
+
+newEventBtn.addEventListener(`click`, () => {
+  pointCreateContainer.appendChild(tripPointCreate.render());
+  showBlock(pointCreateContainer);
+});
+
+tripPointCreate.onClose = () => {
+  tripPointCreate.unrender();
+  hideBlock(pointCreateContainer);
+};
