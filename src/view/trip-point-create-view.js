@@ -96,7 +96,7 @@ export default class TripPointCreateView extends ComponentView {
     const formData = new FormData(this._element.querySelector(`.point form`));
     const newData = this._processForm(formData);
 
-    if (typeof this._onSubmit === `function`) {
+    if (typeof this._onSubmit === `function` && this._validateForm(newData)) {
       this._onSubmit(newData);
     }
   }
@@ -106,7 +106,7 @@ export default class TripPointCreateView extends ComponentView {
 
     if (typeof this._onClose === `function`) {
       this._onClose();
-      this._clearForm();
+      this.clearForm();
     }
   }
 
@@ -151,7 +151,26 @@ export default class TripPointCreateView extends ComponentView {
     this._element.innerHTML = this.template;
   }
 
-  _clearForm() {
+  _validateForm(data) {
+    const fields = [];
+
+    fields.push(data.type.length > 0);
+    fields.push(data.title.length > 0);
+    fields.push(data.price.length > 0);
+    fields.push(data.dateFrom !== 0);
+    fields.push(data.dateTo !== 0);
+
+    const isValid = fields.every((it) => it === true);
+
+    if (!isValid) {
+      this.showBorder(true);
+      this.shake();
+    }
+
+    return isValid;
+  }
+
+  clearForm() {
     this._id = ``;
     this._type = ``;
     this._title = ``;

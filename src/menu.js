@@ -61,3 +61,15 @@ tripPointCreate.onClose = () => {
   tripPointCreate.unrender();
   hideBlock(pointCreateContainer);
 };
+
+tripPointCreate.onSubmit = (newObject) => {
+  console.log(`onSubmit`, newObject);
+
+  tripPointCreate.block();
+  tripPointCreate.showBorder();
+
+  tripPointCreate.unblock();
+  tripPointCreate.unrender();
+  tripPointCreate.clearForm();
+  hideBlock(pointCreateContainer);
+};
