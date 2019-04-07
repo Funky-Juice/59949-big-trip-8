@@ -85,13 +85,13 @@ export default class TripPointEditView extends ComponentView {
       offers: this._offers
     };
 
-    const taskEditMapper = TripPointEditView.createMapper(entry);
+    const pointEditMapper = TripPointEditView.createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
 
-      if (taskEditMapper[property]) {
-        taskEditMapper[property](value);
+      if (pointEditMapper[property]) {
+        pointEditMapper[property](value);
       }
     }
     entry.duration = entry.dateTo - entry.dateFrom;
@@ -108,7 +108,7 @@ export default class TripPointEditView extends ComponentView {
       this._onSubmit(newData);
     }
 
-    this.update(newData);
+    this._update(newData);
   }
 
   _onDeleteButtonClick(evt) {
@@ -160,7 +160,7 @@ export default class TripPointEditView extends ComponentView {
     this._element.innerHTML = this.template;
   }
 
-  update(data) {
+  _update(data) {
     this._type = data.type;
     this._title = data.title;
     this._dateFrom = data.dateFrom;
@@ -294,7 +294,7 @@ export default class TripPointEditView extends ComponentView {
       
             <div class="point__destination-wrap">
               <label class="point__destination-label" for="destination">${this._type} to</label>
-              <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination">
+              <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination" required>
               <datalist id="destination-select">
                 ${DATA.PLACES.map((place) => `
                   <option value="${place.name}"></option>
@@ -311,7 +311,7 @@ export default class TripPointEditView extends ComponentView {
             <label class="point__price">
               write price
               <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="${this._price}" name="price">
+              <input class="point__input" type="text" value="${this._price}" name="price" required>
             </label>
       
             <div class="point__buttons">
