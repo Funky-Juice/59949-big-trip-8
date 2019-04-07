@@ -1,6 +1,6 @@
 import {renderCharts, destroyCharts} from './screens/stats-screen';
 import {renderFilters, renderSortings, renderTripPoints} from './screens/trips-screen';
-import {fetchTripPoints} from './main';
+import {fetchTripPoints, provider} from './main';
 import {DATA, filtersList, sortingsList} from './data/data';
 import {showBlock, hideBlock} from './utils';
 import TripPointCreateView from './view/trip-point-create-view';
@@ -63,13 +63,37 @@ tripPointCreate.onClose = () => {
 };
 
 tripPointCreate.onSubmit = (newObject) => {
-  console.log(`onSubmit`, newObject);
 
   tripPointCreate.block();
   tripPointCreate.showBorder();
 
-  tripPointCreate.unblock();
-  tripPointCreate.unrender();
-  tripPointCreate.clearForm();
-  hideBlock(pointCreateContainer);
+  const toRAW = (data) => {
+    return {
+      'type': data.type,
+      'offers': data.offers,
+      'base_price': data.price,
+      'date_from': data.dateFrom,
+      'date_to': data.dateTo,
+      'is_favorite': data.isFavorite,
+      'destination': {
+        'name': data.title
+      }
+    };
+  };
+
+  provider.createTripPoint(toRAW(newObject))
+    .then(() => {
+      fetchTripPoints()
+        .then((data) => (DATA.POINTS = data[0]))
+        .then(() => {
+          tripPointCreate.unblock();
+          tripPointCreate.unrender();
+          tripPointCreate.clearForm();
+          hideBlock(pointCreateContainer);
+
+          renderFilters(filtersList);
+          renderSortings(sortingsList);
+          renderTripPoints(DATA.POINTS);
+        });
+    });
 };

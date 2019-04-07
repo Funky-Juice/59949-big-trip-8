@@ -90,8 +90,8 @@ export default class Provider {
     }
   }
 
-  createTripPoint({data}) {
-    return this._api.createTripPoint({data});
+  createTripPoint(data) {
+    return this._api.createTripPoint(data);
   }
 
   updateTripPoint({id, data}) {

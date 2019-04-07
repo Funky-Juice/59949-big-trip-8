@@ -7,7 +7,6 @@ export default class TripPointCreateView extends ComponentView {
 
   constructor() {
     super();
-    this._id = Date.now();
     this._type = ``;
     this._title = ``;
     this._pictures = [];
@@ -59,23 +58,18 @@ export default class TripPointCreateView extends ComponentView {
       },
       favorite: (value) => {
         target.isFavorite = value;
-      },
-      offer: (value) => {
-        target.activeOffers.push(value);
       }
     };
   }
 
   _processForm(formData) {
     const entry = {
-      id: this._id,
       type: ``,
       title: ``,
       dateFrom: ``,
       dateTo: ``,
       price: ``,
       isFavorite: false,
-      activeOffers: [],
       offers: this._offers
     };
 
@@ -171,7 +165,6 @@ export default class TripPointCreateView extends ComponentView {
   }
 
   clearForm() {
-    this._id = ``;
     this._type = ``;
     this._title = ``;
     this._pictures = [];

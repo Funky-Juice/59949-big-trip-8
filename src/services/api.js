@@ -42,7 +42,14 @@ export default class API {
       .then((data) => (DATA.OFFERS = data));
   }
 
-  createTripPoint() {}
+  createTripPoint(data) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    });
+  }
 
   updateTripPoint({id, data}) {
     return this._load({
