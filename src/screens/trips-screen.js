@@ -98,5 +98,11 @@ export const renderTripPoints = (points) => {
           tripPointEdit.showBorder(true);
         });
     };
+
+    tripPointEdit.onClose = () => {
+      tripPoint.render();
+      tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      tripPointEdit.unrender();
+    };
   });
 };

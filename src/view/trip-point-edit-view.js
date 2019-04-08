@@ -7,12 +7,13 @@ export default class TripPointEditView extends ComponentView {
 
   constructor(data) {
     super();
+    this._data = JSON.parse(JSON.stringify(data));
     this._id = data.id;
     this._type = data.type;
     this._title = data.title;
     this._pictures = this._getPlace(data.title).pictures;
     this._description = this._getPlace(data.title).description;
-    this._offers = data.offers;
+    this._offers = JSON.parse(JSON.stringify(data.offers));
     this._price = data.price;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
@@ -29,6 +30,9 @@ export default class TripPointEditView extends ComponentView {
     this._onTypeChange = this._onTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
 
+    this._onClose = null;
+    this._onKeyPress = this._onKeyPress.bind(this);
+
     this._saveBtn = null;
     this._deleteBtn = null;
     this._pointWrapper = null;
@@ -40,6 +44,10 @@ export default class TripPointEditView extends ComponentView {
 
   set onDelete(fn) {
     this._onDelete = fn;
+  }
+
+  set onClose(fn) {
+    this._onClose = fn;
   }
 
   _getPlace(name) {
@@ -119,6 +127,13 @@ export default class TripPointEditView extends ComponentView {
     }
   }
 
+  _onKeyPress(evt) {
+    if (evt.key === `Escape` && typeof this._onClose === `function`) {
+      this._onClose();
+      this._resetData(JSON.parse(JSON.stringify(this._data)));
+    }
+  }
+
   _onTypeChange(evt) {
     const offers = DATA.OFFERS.find((obj) => obj.type === evt.target.value);
 
@@ -130,7 +145,7 @@ export default class TripPointEditView extends ComponentView {
           delete obj.name;
         }
       });
-      this._offers = offers.offers;
+      this._offers = JSON.parse(JSON.stringify(offers.offers));
     } else {
       this._offers = [];
     }
@@ -169,6 +184,18 @@ export default class TripPointEditView extends ComponentView {
     this._isFavorite = data.isFavorite;
   }
 
+  _resetData(data) {
+    this._type = data.type;
+    this._title = data.title;
+    this._pictures = this._getPlace(data.title).pictures;
+    this._description = this._getPlace(data.title).description;
+    this._offers = data.offers;
+    this._price = data.price;
+    this._dateFrom = data.dateFrom;
+    this._dateTo = data.dateTo;
+    this._isFavorite = data.isFavorite;
+  }
+
   _onSetOffer(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
 
@@ -185,6 +212,8 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`input[name=destination]`).addEventListener(`change`, this._onDestinationChange);
+
+    document.body.addEventListener(`keyup`, this._onKeyPress);
 
     const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
     inputs.forEach((it) => {
@@ -217,6 +246,8 @@ export default class TripPointEditView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onDeleteButtonClick);
     this._element.querySelector(`input[name=destination]`).removeEventListener(`change`, this._onDestinationChange);
+
+    document.body.removeEventListener(`keyup`, this._onKeyPress);
 
     const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
     inputs.forEach((it) => {
