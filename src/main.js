@@ -21,7 +21,7 @@ const STORE_KEYS = {
 
 const api = new Api(API_URL, AUTHORIZATION);
 const store = new Store({key: STORE_KEYS, storage: localStorage});
-export const provider = new Provider({api, store});
+export const provider = new Provider({api, store, generateId: () => String(Date.now())});
 
 window.addEventListener(`offline`, () => (document.title = `${document.title} [OFFLINE]`));
 window.addEventListener(`online`, () => {
