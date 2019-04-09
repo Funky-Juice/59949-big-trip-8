@@ -4,6 +4,7 @@ import {fetchTripPoints, provider} from './main';
 import {DATA, filtersList, sortingsList} from './data/data';
 import {showBlock, hideBlock} from './utils';
 import TripPointCreateView from './view/trip-point-create-view';
+import emitter from './services/emitter';
 
 const tripPointCreate = new TripPointCreateView();
 
@@ -53,6 +54,7 @@ pointsBtn.addEventListener(`click`, () => {
 
 
 newEventBtn.addEventListener(`click`, () => {
+  emitter.emit(`showModal`);
   pointCreateContainer.appendChild(tripPointCreate.render());
   showBlock(pointCreateContainer);
 });

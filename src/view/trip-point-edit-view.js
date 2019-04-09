@@ -130,7 +130,6 @@ export default class TripPointEditView extends ComponentView {
   _onKeyPress(evt) {
     if (evt.key === `Escape` && typeof this._onClose === `function`) {
       this._onClose();
-      this._resetData(JSON.parse(JSON.stringify(this._data)));
     }
   }
 
@@ -184,7 +183,7 @@ export default class TripPointEditView extends ComponentView {
     this._isFavorite = data.isFavorite;
   }
 
-  _resetData(data) {
+  resetData(data = JSON.parse(JSON.stringify(this._data))) {
     this._type = data.type;
     this._title = data.title;
     this._pictures = this._getPlace(data.title).pictures;

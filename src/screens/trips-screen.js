@@ -5,6 +5,7 @@ import SortingView from '../view/sorting-view';
 import {filterPoints, sortPoints} from '../utils';
 import {provider} from '../main';
 import {DATA} from '../data/data';
+import emitter from '../services/emitter';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
@@ -47,6 +48,15 @@ export const renderTripPoints = (points) => {
     const tripPointEdit = new TripPointEditView(point);
 
     tripPointsContainer.appendChild(tripPoint.render());
+
+    emitter.on(`showModal`, () => {
+      if (tripPointEdit.element) {
+        tripPoint.render();
+        tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+        tripPointEdit.resetData();
+        tripPointEdit.unrender();
+      }
+    });
 
     tripPoint.onClick = () => {
       tripPointEdit.render();
@@ -102,6 +112,7 @@ export const renderTripPoints = (points) => {
     tripPointEdit.onClose = () => {
       tripPoint.render();
       tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      tripPointEdit.resetData();
       tripPointEdit.unrender();
     };
   });
