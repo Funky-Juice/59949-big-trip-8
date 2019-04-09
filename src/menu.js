@@ -54,7 +54,7 @@ pointsBtn.addEventListener(`click`, () => {
 
 
 newEventBtn.addEventListener(`click`, () => {
-  emitter.emit(`showModal`);
+  emitter.emit(`closeTripPointEdit`);
   pointCreateContainer.appendChild(tripPointCreate.render());
   showBlock(pointCreateContainer);
 });

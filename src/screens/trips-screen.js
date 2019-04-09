@@ -49,7 +49,7 @@ export const renderTripPoints = (points) => {
 
     tripPointsContainer.appendChild(tripPoint.render());
 
-    emitter.on(`showModal`, () => {
+    emitter.on(`closeTripPointEdit`, () => {
       if (tripPointEdit.element) {
         tripPoint.render();
         tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
@@ -59,6 +59,7 @@ export const renderTripPoints = (points) => {
     });
 
     tripPoint.onClick = () => {
+      emitter.emit(`closeTripPointEdit`);
       tripPointEdit.render();
       tripPointsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
       tripPoint.unrender();
