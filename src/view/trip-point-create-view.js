@@ -22,6 +22,7 @@ export default class TripPointCreateView extends ComponentView {
 
     this._onClose = null;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onKeyPress = this._onKeyPress.bind(this);
 
     this._onTypeChange = this._onTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
@@ -104,6 +105,13 @@ export default class TripPointCreateView extends ComponentView {
     }
   }
 
+  _onKeyPress(evt) {
+    if (evt.key === `Escape` && typeof this._onClose === `function`) {
+      this._onClose();
+      this.clearForm();
+    }
+  }
+
   _onTypeChange(evt) {
     const offers = DATA.OFFERS.find((obj) => obj.type === evt.target.value);
 
@@ -115,7 +123,7 @@ export default class TripPointCreateView extends ComponentView {
           delete obj.name;
         }
       });
-      this._offers = offers.offers;
+      this._offers = JSON.parse(JSON.stringify(offers.offers));
     } else {
       this._offers = [];
     }
@@ -191,6 +199,8 @@ export default class TripPointCreateView extends ComponentView {
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onCloseButtonClick);
     this._element.querySelector(`input[name=destination]`).addEventListener(`change`, this._onDestinationChange);
 
+    document.body.addEventListener(`keyup`, this._onKeyPress);
+
     const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
     inputs.forEach((it) => {
       it.addEventListener(`change`, this._onTypeChange);
@@ -220,6 +230,8 @@ export default class TripPointCreateView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onCloseButtonClick);
     this._element.querySelector(`input[name=destination]`).removeEventListener(`change`, this._onDestinationChange);
+
+    document.body.removeEventListener(`keyup`, this._onKeyPress);
 
     const inputs = this._element.querySelectorAll(`input[name=travel-way]`);
     inputs.forEach((it) => {
@@ -307,7 +319,7 @@ export default class TripPointCreateView extends ComponentView {
             <label class="point__price">
               write price
               <span class="point__price-currency">€</span>
-              <input class="point__input" type="text" value="${this._price}" name="price" placeholder="0">
+              <input class="point__input" type="number" value="${this._price}" name="price" placeholder="0">
             </label>
       
             <div class="point__buttons">
