@@ -12,7 +12,7 @@ export default class TripPointCreateView extends ComponentView {
     this._pictures = [];
     this._description = ``;
     this._offers = [];
-    this._price = ``;
+    this._price = 0;
     this._isFavorite = false;
 
     this._onSubmit = null;
@@ -26,6 +26,7 @@ export default class TripPointCreateView extends ComponentView {
 
     this._onTypeChange = this._onTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+    this._onPriceChange = this._onPriceChange.bind(this);
 
     this._saveBtn = null;
     this._closeBtn = null;
@@ -55,7 +56,7 @@ export default class TripPointCreateView extends ComponentView {
         target.dateTo = value * 1000;
       },
       price: (value) => {
-        target.price = value;
+        target.price = parseInt(value, 10);
       },
       favorite: (value) => {
         target.isFavorite = value;
@@ -69,7 +70,7 @@ export default class TripPointCreateView extends ComponentView {
       title: ``,
       dateFrom: ``,
       dateTo: ``,
-      price: ``,
+      price: 0,
       isFavorite: false,
       offers: this._offers
     };
@@ -113,6 +114,13 @@ export default class TripPointCreateView extends ComponentView {
   }
 
   _onTypeChange(evt) {
+
+    this._offers.forEach((offer) => {
+      if (offer.accepted) {
+        this._price -= offer.price;
+      }
+    });
+
     const offers = DATA.OFFERS.find((obj) => obj.type === evt.target.value);
 
     if (offers) {
@@ -149,6 +157,24 @@ export default class TripPointCreateView extends ComponentView {
     this.bind();
   }
 
+  _onPriceChange(evt) {
+    const priceInt = parseInt(evt.target.value, 10);
+
+    if (priceInt === this._price) {
+      return;
+    }
+
+    this._price = priceInt;
+
+    this._offers.forEach((offer) => {
+      offer.accepted = false;
+    });
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
+  }
+
   _partialUpdate() {
     this._element.innerHTML = this.template;
   }
@@ -158,7 +184,7 @@ export default class TripPointCreateView extends ComponentView {
 
     fields.push(data.type.length > 0);
     fields.push(data.title.length > 0);
-    fields.push(data.price.length > 0);
+    fields.push(data.price > 0);
     fields.push(data.dateFrom !== 0);
     fields.push(data.dateTo !== 0);
 
@@ -178,16 +204,26 @@ export default class TripPointCreateView extends ComponentView {
     this._pictures = [];
     this._description = ``;
     this._offers = [];
-    this._price = ``;
+    this._price = 0;
     this._isFavorite = false;
   }
 
   _onSetOffer(evt) {
     if (evt.target.tagName.toLowerCase() === `input`) {
 
-      this._offers.forEach((it) => {
-        if (it.title === evt.target.attributes.label.value) {
-          it.accepted = !it.accepted;
+      this._offers.forEach((offer) => {
+        if (offer.title === evt.target.attributes.label.value) {
+          offer.accepted = !offer.accepted;
+
+          if (offer.accepted) {
+            this._price += offer.price;
+          } else {
+            this._price -= offer.price;
+          }
+
+          this.unbind();
+          this._partialUpdate();
+          this.bind();
         }
       });
     }
@@ -198,6 +234,7 @@ export default class TripPointCreateView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onCloseButtonClick);
     this._element.querySelector(`input[name=destination]`).addEventListener(`change`, this._onDestinationChange);
+    this._element.querySelector(`input[name=price]`).addEventListener(`blur`, this._onPriceChange);
 
     document.body.addEventListener(`keyup`, this._onKeyPress);
 
@@ -230,6 +267,7 @@ export default class TripPointCreateView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onCloseButtonClick);
     this._element.querySelector(`input[name=destination]`).removeEventListener(`change`, this._onDestinationChange);
+    this._element.querySelector(`input[name=price]`).removeEventListener(`blur`, this._onPriceChange);
 
     document.body.removeEventListener(`keyup`, this._onKeyPress);
 
