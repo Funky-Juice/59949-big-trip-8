@@ -8,6 +8,13 @@ export const createElement = (template) => {
   return elem.firstChild;
 };
 
+export const calcTotalPrice = (container, points) => {
+  let totalCost = 0;
+  points.forEach((point) => (totalCost += point.price));
+
+  container.innerText = totalCost;
+};
+
 export const filterPoints = (points, filterName) => {
 
   switch (filterName) {

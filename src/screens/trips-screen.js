@@ -4,6 +4,7 @@ import FilterView from '../view/filter-view';
 import SortingView from '../view/sorting-view';
 import {filterPoints, sortPoints} from '../utils';
 import {provider} from '../main';
+import {calcTotalPrice} from '../utils';
 import {DATA} from '../data/data';
 import emitter from '../services/emitter';
 
@@ -11,6 +12,7 @@ import emitter from '../services/emitter';
 const filtersContainer = document.querySelector(`.trip-filter`);
 const sortingsContainer = document.querySelector(`.trip-sorting`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
+const tripTotalCostContainer = document.querySelector(`.trip__total-cost`);
 
 export const renderFilters = (filters) => {
   filtersContainer.innerHTML = ``;
@@ -42,6 +44,7 @@ export const renderSortings = (sortings) => {
 
 export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
+  calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
 
   points.forEach((point) => {
     const tripPoint = new TripPointView(point);
@@ -86,6 +89,7 @@ export const renderTripPoints = (points) => {
           tripPoint.render();
           tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
           tripPointEdit.unrender();
+          calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
         })
         .catch(() => {
           tripPointEdit.shake();
@@ -102,6 +106,7 @@ export const renderTripPoints = (points) => {
         .then(() => {
           DATA.POINTS = DATA.POINTS.filter((obj) => obj.id !== id.id);
           tripPointEdit.unrender();
+          calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
         })
         .catch(() => {
           tripPointEdit.shake();
