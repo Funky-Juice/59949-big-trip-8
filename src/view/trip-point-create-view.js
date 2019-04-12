@@ -215,6 +215,8 @@ export default class TripPointCreateView extends ComponentView {
     this._description = ``;
     this._offers = [];
     this._price = 0;
+    this._dateFrom = 0;
+    this._dateTo = 0;
     this._isFavorite = false;
   }
 
