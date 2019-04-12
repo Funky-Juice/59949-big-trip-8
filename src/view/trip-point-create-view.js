@@ -13,17 +13,12 @@ export default class TripPointCreateView extends ComponentView {
     this._description = ``;
     this._offers = [];
     this._price = 0;
+    this._dateFrom = 0;
+    this._dateTo = 0;
     this._isFavorite = false;
 
     this._calendarDateStart = null;
     this._calendarDateEnd = null;
-
-    this._flatpickrOptions = {
-      enableTime: true,
-      altInput: true,
-      altFormat: `H:i`,
-      dateFormat: `U`
-    };
 
     this._onSubmit = null;
     this._onFormSubmit = this._onFormSubmit.bind(this);
@@ -253,8 +248,27 @@ export default class TripPointCreateView extends ComponentView {
       it.addEventListener(`change`, this._onTypeChange);
     });
 
-    this._calendarDateStart = flatpickr(this._element.querySelector(`.point__time [name='date-start']`), this._flatpickrOptions);
-    this._calendarDateEnd = flatpickr(this._element.querySelector(`.point__time [name='date-end']`), this._flatpickrOptions);
+    this._calendarDateStart = flatpickr(this._element.querySelector(`.point__time [name='date-start']`), {
+      enableTime: true,
+      altInput: true,
+      altFormat: `H:i`,
+      dateFormat: `U`,
+      defaultDate: this._dateFrom,
+      onClose: (selectedDates, dateStr) => {
+        this._dateFrom = dateStr;
+      }
+    });
+
+    this._calendarDateEnd = flatpickr(this._element.querySelector(`.point__time [name='date-end']`), {
+      enableTime: true,
+      altInput: true,
+      altFormat: `H:i`,
+      dateFormat: `U`,
+      defaultDate: this._dateTo,
+      onClose: (selectedDates, dateStr) => {
+        this._dateTo = dateStr;
+      }
+    });
 
     this._saveBtn = this._element.querySelector(`.point__button--save`);
     this._closeBtn = this._element.querySelector(`.point__button--delete`);

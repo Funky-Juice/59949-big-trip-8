@@ -265,7 +265,10 @@ export default class TripPointEditView extends ComponentView {
       altInput: true,
       altFormat: `H:i`,
       dateFormat: `U`,
-      defaultDate: this._dateFrom
+      defaultDate: this._dateFrom,
+      onClose: (selectedDates, dateStr) => {
+        this._dateFrom = dateStr;
+      }
     });
 
     this._calendarDateEnd = flatpickr(this._element.querySelector(`.point__time [name='date-end']`), {
@@ -273,7 +276,10 @@ export default class TripPointEditView extends ComponentView {
       altInput: true,
       altFormat: `H:i`,
       dateFormat: `U`,
-      defaultDate: this._dateTo
+      defaultDate: this._dateTo,
+      onClose: (selectedDates, dateStr) => {
+        this._dateTo = dateStr;
+      }
     });
 
     this._saveBtn = this._element.querySelector(`.point__button--save`);
