@@ -44,6 +44,7 @@ export const renderSortings = (sortings) => {
 
 export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
+  emitter.emit(`tripPointEditUnrender`);
   calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
 
   points.forEach((point) => {
@@ -51,6 +52,12 @@ export const renderTripPoints = (points) => {
     const tripPointEdit = new TripPointEditView(point);
 
     tripPointsContainer.appendChild(tripPoint.render());
+
+    emitter.on(`tripPointEditUnrender`, () => {
+      if (tripPointEdit.element) {
+        tripPointEdit.unrender();
+      }
+    });
 
     emitter.on(`closeTripPointEdit`, () => {
       if (tripPointEdit.element) {
