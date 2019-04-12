@@ -31,6 +31,7 @@ export default class TripPointCreateView extends ComponentView {
 
     this._onTypeChange = this._onTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+    this._onFavoriteChange = this._onFavoriteChange.bind(this);
     this._onPriceChange = this._onPriceChange.bind(this);
 
     this._saveBtn = null;
@@ -64,7 +65,7 @@ export default class TripPointCreateView extends ComponentView {
         target.price = parseInt(value, 10);
       },
       favorite: (value) => {
-        target.isFavorite = value;
+        target.isFavorite = value ? true : false;
       }
     };
   }
@@ -180,6 +181,10 @@ export default class TripPointCreateView extends ComponentView {
     this.bind();
   }
 
+  _onFavoriteChange(evt) {
+    this._isFavorite = evt.target.checked;
+  }
+
   _partialUpdate() {
     this._element.innerHTML = this.template;
   }
@@ -239,6 +244,7 @@ export default class TripPointCreateView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).addEventListener(`click`, this._onCloseButtonClick);
     this._element.querySelector(`input[name=destination]`).addEventListener(`change`, this._onDestinationChange);
+    this._element.querySelector(`input[name=favorite]`).addEventListener(`change`, this._onFavoriteChange);
     this._element.querySelector(`input[name=price]`).addEventListener(`blur`, this._onPriceChange);
 
     document.body.addEventListener(`keyup`, this._onKeyPress);
@@ -280,6 +286,7 @@ export default class TripPointCreateView extends ComponentView {
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._onSetOffer);
     this._element.querySelector(`.point__button--delete`).removeEventListener(`click`, this._onCloseButtonClick);
     this._element.querySelector(`input[name=destination]`).removeEventListener(`change`, this._onDestinationChange);
+    this._element.querySelector(`input[name=favorite]`).removeEventListener(`change`, this._onFavoriteChange);
     this._element.querySelector(`input[name=price]`).removeEventListener(`blur`, this._onPriceChange);
 
     document.body.removeEventListener(`keyup`, this._onKeyPress);
