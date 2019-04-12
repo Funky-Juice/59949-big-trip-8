@@ -8,6 +8,13 @@ export const createElement = (template) => {
   return elem.firstChild;
 };
 
+export const calcTotalPrice = (container, points) => {
+  let totalCost = 0;
+  points.forEach((point) => (totalCost += point.price));
+
+  container.innerText = totalCost;
+};
+
 export const filterPoints = (points, filterName) => {
 
   switch (filterName) {
@@ -15,10 +22,28 @@ export const filterPoints = (points, filterName) => {
       return points;
 
     case `future`:
-      return points.filter((it) => it.time > Date.now());
+      return points.filter((it) => it.dateFrom > Date.now());
 
     case `past`:
-      return points.filter((it) => it.time < Date.now());
+      return points.filter((it) => it.dateTo < Date.now());
+
+    default:
+      return points;
+  }
+};
+
+export const sortPoints = (points, sortingName) => {
+
+  switch (sortingName) {
+    case `event`:
+      return points;
+
+    case `time`:
+      const newArr = Array.from(points);
+      return newArr.sort((a, b) => b.duration - a.duration);
+
+    case `price`:
+      return Array.from(points).sort((a, b) => b.price - a.price);
 
     default:
       return points;
@@ -57,6 +82,7 @@ const deleteEmptyObjProps = (obj) => {
 
 export const chartsDataAdapter = (points, data) => {
   let moneyAmount = {};
+  let timeAmount = {};
   let transportAmount = {};
 
   if (!points) {
@@ -65,9 +91,12 @@ export const chartsDataAdapter = (points, data) => {
 
   Object.keys(data.ICONS).map((it) => {
     moneyAmount[it] = null;
+    timeAmount[it] = null;
+
     points.map((point) => {
       if (point.type === it) {
         moneyAmount[it] += parseInt(point.price, 10);
+        timeAmount[it] += parseInt(point.duration, 10);
       }
     });
   });
@@ -75,6 +104,12 @@ export const chartsDataAdapter = (points, data) => {
   deleteEmptyObjProps(moneyAmount);
   const sortedMoney = sortObjValues(moneyAmount);
   moneyAmount = objEntriesToObj(sortedMoney);
+
+  deleteEmptyObjProps(timeAmount);
+  const sortedTime = sortObjValues(timeAmount);
+  timeAmount = objEntriesToObj(sortedTime);
+
+  timeAmount.data = timeAmount.data.map((ms) => (Math.round((ms / 1000 / 60 / 60) * 10) / 10));
 
 
   const tripTypesArr = points.map((task) => task.type);
@@ -88,6 +123,7 @@ export const chartsDataAdapter = (points, data) => {
 
   return {
     money: moneyAmount,
+    time: timeAmount,
     transport: transportAmount
   };
 };

@@ -2,19 +2,19 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {DATA} from '../data/data';
 
-const transportCtx = document.querySelector(`.statistic__transport`).getContext(`2d`);
+const timeSpentCtx = document.querySelector(`.statistic__time-spend`).getContext(`2d`);
 
 export default (points) => {
   if (!points) {
     return null;
   } else {
-    const transportChart = new Chart(transportCtx, {
+    const timeChart = new Chart(timeSpentCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: points.transport.labels,
+        labels: points.time.labels,
         datasets: [{
-          data: points.transport.data,
+          data: points.time.data,
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#ffffff`,
           anchor: `start`
@@ -29,12 +29,12 @@ export default (points) => {
             color: `#000000`,
             anchor: `end`,
             align: `start`,
-            formatter: (val) => `${val}x`
+            formatter: (val) => `${val} H`
           }
         },
         title: {
           display: true,
-          text: `TRANSPORT`,
+          text: `TIME SPENT`,
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`
@@ -74,6 +74,6 @@ export default (points) => {
       }
     });
 
-    return transportChart;
+    return timeChart;
   }
 };

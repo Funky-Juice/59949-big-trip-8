@@ -4,10 +4,11 @@ import {DATA} from '../data/data';
 
 
 export default class Provider {
-  constructor({api, store}) {
+  constructor({api, store, generateId}) {
     this._api = api;
     this._store = store;
     this._needSync = false;
+    this._generateId = generateId;
   }
 
   _isOnline() {
@@ -90,8 +91,15 @@ export default class Provider {
     }
   }
 
-  createTripPoint({data}) {
-    return this._api.createTripPoint({data});
+  createTripPoint(data) {
+    if (this._isOnline()) {
+      return this._api.createTripPoint(data);
+    } else {
+      data.id = this._generateId();
+      this._needSync = true;
+      this._store.setItem({key: data.id, item: data, storeKey: `points`});
+      return Promise.resolve(TripModel.parseTrip(data));
+    }
   }
 
   updateTripPoint({id, data}) {

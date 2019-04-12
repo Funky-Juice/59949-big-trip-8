@@ -10,6 +10,7 @@ export default class TripModel {
     this.price = data[`base_price`];
     this.dateFrom = data[`date_from`];
     this.dateTo = data[`date_to`];
+    this.duration = data[`date_to`] - data[`date_from`];
     this.isFavorite = Boolean(data[`is_favorite`]);
   }
 

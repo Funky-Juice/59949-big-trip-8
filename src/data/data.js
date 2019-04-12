@@ -1,5 +1,6 @@
 
 export const DATA = {
+  POINTS: [],
   PLACES: [],
   OFFERS: [],
   ICONS: {
@@ -20,4 +21,11 @@ export const filtersList = [
   {name: `everything`},
   {name: `future`},
   {name: `past`}
+];
+
+export const sortingsList = [
+  {name: `event`},
+  {name: `time`},
+  {name: `price`},
+  {name: `offers`}
 ];
