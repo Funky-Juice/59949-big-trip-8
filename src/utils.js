@@ -82,6 +82,7 @@ const deleteEmptyObjProps = (obj) => {
 
 export const chartsDataAdapter = (points, data) => {
   let moneyAmount = {};
+  let timeAmount = {};
   let transportAmount = {};
 
   if (!points) {
@@ -90,9 +91,12 @@ export const chartsDataAdapter = (points, data) => {
 
   Object.keys(data.ICONS).map((it) => {
     moneyAmount[it] = null;
+    timeAmount[it] = null;
+
     points.map((point) => {
       if (point.type === it) {
         moneyAmount[it] += parseInt(point.price, 10);
+        timeAmount[it] += parseInt(point.duration, 10);
       }
     });
   });
@@ -100,6 +104,12 @@ export const chartsDataAdapter = (points, data) => {
   deleteEmptyObjProps(moneyAmount);
   const sortedMoney = sortObjValues(moneyAmount);
   moneyAmount = objEntriesToObj(sortedMoney);
+
+  deleteEmptyObjProps(timeAmount);
+  const sortedTime = sortObjValues(timeAmount);
+  timeAmount = objEntriesToObj(sortedTime);
+
+  timeAmount.data = timeAmount.data.map((ms) => (Math.round((ms / 1000 / 60 / 60) * 10) / 10));
 
 
   const tripTypesArr = points.map((task) => task.type);
@@ -113,6 +123,7 @@ export const chartsDataAdapter = (points, data) => {
 
   return {
     money: moneyAmount,
+    time: timeAmount,
     transport: transportAmount
   };
 };
