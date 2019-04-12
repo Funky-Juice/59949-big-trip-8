@@ -1,18 +1,21 @@
 import TripPointView from '../view/trip-point-view';
 import TripPointEditView from '../view/trip-point-edit-view';
+import TripPointCreateView from '../view/trip-point-create-view';
 import FilterView from '../view/filter-view';
 import SortingView from '../view/sorting-view';
-import {filterPoints, sortPoints} from '../utils';
-import {provider} from '../main';
+import {filterPoints, hideBlock, showBlock, sortPoints} from '../utils';
+import {fetchTripPoints, provider} from '../main';
 import {calcTotalPrice} from '../utils';
-import {DATA} from '../data/data';
+import {DATA, filtersList, sortingsList} from '../data/data';
 import emitter from '../services/emitter';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const sortingsContainer = document.querySelector(`.trip-sorting`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
+const pointCreateContainer = document.querySelector(`.point-create-form-wrapper`);
 const tripTotalCostContainer = document.querySelector(`.trip__total-cost`);
+
 
 export const renderFilters = (filters) => {
   filtersContainer.innerHTML = ``;
@@ -28,6 +31,7 @@ export const renderFilters = (filters) => {
   });
 };
 
+
 export const renderSortings = (sortings) => {
   sortingsContainer.innerHTML = ``;
 
@@ -41,6 +45,7 @@ export const renderSortings = (sortings) => {
     };
   });
 };
+
 
 export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
@@ -129,4 +134,53 @@ export const renderTripPoints = (points) => {
       tripPointEdit.unrender();
     };
   });
+};
+
+
+const tripPointCreate = new TripPointCreateView();
+
+export const renderCreateTripPoint = () => {
+  pointCreateContainer.appendChild(tripPointCreate.render());
+  showBlock(pointCreateContainer);
+};
+
+tripPointCreate.onClose = () => {
+  tripPointCreate.unrender();
+  hideBlock(pointCreateContainer);
+};
+
+tripPointCreate.onSubmit = (newObject) => {
+
+  tripPointCreate.block();
+  tripPointCreate.showBorder();
+
+  const toRAW = (data) => {
+    return {
+      'type': data.type,
+      'offers': data.offers,
+      'base_price': data.price,
+      'date_from': data.dateFrom,
+      'date_to': data.dateTo,
+      'is_favorite': data.isFavorite,
+      'destination': {
+        'name': data.title
+      }
+    };
+  };
+
+  provider.createTripPoint(toRAW(newObject))
+    .then(() => {
+      fetchTripPoints()
+        .then((data) => (DATA.POINTS = data[0]))
+        .then(() => {
+          tripPointCreate.unblock();
+          tripPointCreate.unrender();
+          tripPointCreate.clearForm();
+          hideBlock(pointCreateContainer);
+
+          renderFilters(filtersList);
+          renderSortings(sortingsList);
+          renderTripPoints(DATA.POINTS);
+        });
+    });
 };
