@@ -19,6 +19,9 @@ export default class TripPointEditView extends ComponentView {
     this._dateTo = data.dateTo;
     this._isFavorite = data.isFavorite;
 
+    this._calendarDateStart = null;
+    this._calendarDateEnd = null;
+
     this._onSubmit = null;
     this._onFormSubmit = this._onFormSubmit.bind(this);
 
@@ -257,7 +260,7 @@ export default class TripPointEditView extends ComponentView {
       it.addEventListener(`change`, this._onTypeChange);
     });
 
-    this._element.querySelector(`.point__time [name='date-start']`).flatpickr({
+    this._calendarDateStart = flatpickr(this._element.querySelector(`.point__time [name='date-start']`), {
       enableTime: true,
       altInput: true,
       altFormat: `H:i`,
@@ -265,7 +268,7 @@ export default class TripPointEditView extends ComponentView {
       defaultDate: this._dateFrom
     });
 
-    this._element.querySelector(`.point__time [name='date-end']`).flatpickr({
+    this._calendarDateEnd = flatpickr(this._element.querySelector(`.point__time [name='date-end']`), {
       enableTime: true,
       altInput: true,
       altFormat: `H:i`,
@@ -291,6 +294,9 @@ export default class TripPointEditView extends ComponentView {
     inputs.forEach((it) => {
       it.removeEventListener(`change`, this._onTypeChange);
     });
+
+    this._calendarDateStart.destroy();
+    this._calendarDateEnd.destroy();
   }
 
   shake() {
