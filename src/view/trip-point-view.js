@@ -37,8 +37,14 @@ export default class TripPointView extends ComponentView {
     offers.map((offer) => {
       if (offer.accepted) {
         tempArr.push(`${offer.title} + €${offer.price}`);
+
+        if (tempArr.length > 3) {
+          tempArr.length = 3;
+          return;
+        }
       }
     });
+
     return tempArr;
   }
 
