@@ -1,6 +1,5 @@
 import ComponentView from './component';
 import {DATA} from '../data/data';
-// eslint-disable-next-line
 import flatpickr from 'flatpickr';
 
 export default class TripPointEditView extends ComponentView {

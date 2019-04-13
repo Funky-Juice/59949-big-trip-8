@@ -39,8 +39,6 @@ export default class Store {
     try {
       return JSON.parse(items);
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(`Error parse items. Error: ${e}. Items: ${items}`);
       return emptyItems;
     }
   }

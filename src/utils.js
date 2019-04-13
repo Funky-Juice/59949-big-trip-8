@@ -1,5 +1,3 @@
-export const moment = require(`moment`);
-
 
 export const createElement = (template) => {
   const elem = document.createElement(`div`);

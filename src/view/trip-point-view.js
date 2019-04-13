@@ -1,6 +1,6 @@
 import ComponentView from './component';
 import {DATA} from '../data/data';
-import {moment} from '../utils';
+import moment from 'moment';
 
 export default class TripPointView extends ComponentView {
 
