@@ -34,13 +34,12 @@ export default class Provider {
           this._store.setItems({items: pointsObj, storeKey: `points`});
           return TripModel.parseTrips(points);
         });
-    } else {
-      const pointsMap = this._store.getAll({storeKey: `points`});
-      const rawPoints = objectToArray(pointsMap);
-      const points = TripModel.parseTrips(rawPoints);
-
-      return Promise.resolve(points);
     }
+    const pointsMap = this._store.getAll({storeKey: `points`});
+    const rawPoints = objectToArray(pointsMap);
+    const points = TripModel.parseTrips(rawPoints);
+
+    return Promise.resolve(points);
   }
 
   getDestinations() {
@@ -58,13 +57,12 @@ export default class Provider {
           this._store.setItems({items: destinationsObj, storeKey: `destinations`});
           return destinations;
         });
-    } else {
-      const destinationsMap = this._store.getAll({storeKey: `destinations`});
-      const destinations = objectToArray(destinationsMap);
-      DATA.PLACES = destinations;
-
-      return Promise.resolve(destinations);
     }
+    const destinationsMap = this._store.getAll({storeKey: `destinations`});
+    const destinations = objectToArray(destinationsMap);
+    DATA.PLACES = destinations;
+
+    return Promise.resolve(destinations);
   }
 
   getOffers() {
@@ -82,24 +80,22 @@ export default class Provider {
           this._store.setItems({items: offersObj, storeKey: `offers`});
           return offers;
         });
-    } else {
-      const offersMap = this._store.getAll({storeKey: `offers`});
-      const offers = objectToArray(offersMap);
-      DATA.OFFERS = offers;
-
-      return Promise.resolve(offers);
     }
+    const offersMap = this._store.getAll({storeKey: `offers`});
+    const offers = objectToArray(offersMap);
+    DATA.OFFERS = offers;
+
+    return Promise.resolve(offers);
   }
 
   createTripPoint(data) {
     if (this._isOnline()) {
       return this._api.createTripPoint(data);
-    } else {
-      data.id = this._generateId();
-      this._needSync = true;
-      this._store.setItem({key: data.id, item: data, storeKey: `points`});
-      return Promise.resolve(TripModel.parseTrip(data));
     }
+    data.id = this._generateId();
+    this._needSync = true;
+    this._store.setItem({key: data.id, item: data, storeKey: `points`});
+    return Promise.resolve(TripModel.parseTrip(data));
   }
 
   updateTripPoint({id, data}) {
@@ -109,12 +105,11 @@ export default class Provider {
           this._store.setItem({key: point.id, item: point.toRAW(), storeKey: `points`});
           return point;
         });
-    } else {
-      const point = data;
-      this._needSync = true;
-      this._store.setItem({key: point.id, item: point, storeKey: `points`});
-      return Promise.resolve(TripModel.parseTrip(point));
     }
+    const point = data;
+    this._needSync = true;
+    this._store.setItem({key: point.id, item: point, storeKey: `points`});
+    return Promise.resolve(TripModel.parseTrip(point));
   }
 
   deleteTripPoint({id}) {
@@ -123,10 +118,9 @@ export default class Provider {
         .then(() => {
           this._store.removeItem({key: id, storeKey: `points`});
         });
-    } else {
-      this._needSync = true;
-      this._store.removeItem({key: id, storeKey: `points`});
-      return Promise.resolve(true);
     }
+    this._needSync = true;
+    this._store.removeItem({key: id, storeKey: `points`});
+    return Promise.resolve(true);
   }
 }
