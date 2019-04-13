@@ -340,11 +340,7 @@ export default class TripPointEditView extends ComponentView {
   }
 
   showBorder(isShown) {
-    if (isShown) {
-      this._pointWrapper.style.border = `1px solid red`;
-    } else {
-      this._pointWrapper.style.border = `none`;
-    }
+    this._pointWrapper.style.border = isShown ? `1px solid red` : `none`;
   }
 
   get template() {
