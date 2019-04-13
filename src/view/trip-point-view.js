@@ -20,9 +20,19 @@ export default class TripPointView extends ComponentView {
 
   get duration() {
     const diff = this._duration;
-    const hours = Math.floor(moment.duration(diff).asHours());
+    const days = Math.floor(moment.duration(diff).asDays());
+    const hours = moment.utc(diff).format(`HH`);
     const minutes = moment.utc(diff).format(`mm`);
-    const time = `${hours}h ${minutes}m`;
+
+    let time = ``;
+
+    if (days) {
+      time = `${days}d ${hours}h ${minutes}m`;
+    } else if (parseInt(hours, 10)) {
+      time = `${hours}h ${minutes}m`;
+    } else {
+      time = `${minutes}m`;
+    }
 
     return time;
   }
