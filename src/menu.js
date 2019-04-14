@@ -52,4 +52,9 @@ pointsBtn.addEventListener(`click`, () => {
 newEventBtn.addEventListener(`click`, () => {
   emitter.emit(`closeTripPointEdit`);
   renderCreateTripPoint();
+  newEventBtn.disabled = true;
+});
+
+emitter.on(`unbindTripPointCreate`, () => {
+  newEventBtn.disabled = false;
 });

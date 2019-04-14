@@ -3,17 +3,16 @@ import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointCreateView from '../view/trip-point-create-view';
 import FilterView from '../view/filter-view';
 import SortingView from '../view/sorting-view';
-import {filterPoints, hideBlock, showBlock, sortPoints} from '../utils';
+import {filterPoints, sortPoints} from '../utils';
 import {fetchTripPoints, provider} from '../main';
 import {calcTotalPrice} from '../utils';
-import {DATA, filtersList, sortingsList} from '../data/data';
+import {DATA} from '../data/data';
 import emitter from '../services/emitter';
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const sortingsContainer = document.querySelector(`.trip-sorting`);
 const tripPointsContainer = document.querySelector(`.trip-day__items`);
-const pointCreateContainer = document.querySelector(`.point-create-form-wrapper`);
 const tripTotalCostContainer = document.querySelector(`.trip__total-cost`);
 
 
@@ -50,6 +49,7 @@ export const renderSortings = (sortings) => {
 export const renderTripPoints = (points) => {
   tripPointsContainer.innerHTML = ``;
   emitter.emit(`tripPointEditUnrender`);
+  emitter.emit(`tripPointCreateUnrender`);
   calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
 
   points.forEach((point) => {
@@ -58,12 +58,22 @@ export const renderTripPoints = (points) => {
 
     tripPointsContainer.appendChild(tripPoint.render());
 
+    emitter.on(`tripPointCreateUnrender`, () => {
+      if (tripPointCreate.element) {
+        tripPointCreate.unrender();
+      }
+    });
     emitter.on(`tripPointEditUnrender`, () => {
       if (tripPointEdit.element) {
         tripPointEdit.unrender();
       }
     });
-
+    emitter.on(`closeTripPointCreate`, () => {
+      if (tripPointCreate.element) {
+        tripPointCreate.unrender();
+        tripPointCreate.clearForm();
+      }
+    });
     emitter.on(`closeTripPointEdit`, () => {
       if (tripPointEdit.element) {
         tripPoint.render();
@@ -75,6 +85,7 @@ export const renderTripPoints = (points) => {
 
     tripPoint.onClick = () => {
       emitter.emit(`closeTripPointEdit`);
+      emitter.emit(`closeTripPointCreate`);
       tripPointEdit.render();
       tripPointsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
       tripPoint.unrender();
@@ -140,13 +151,12 @@ export const renderTripPoints = (points) => {
 const tripPointCreate = new TripPointCreateView();
 
 export const renderCreateTripPoint = () => {
-  pointCreateContainer.appendChild(tripPointCreate.render());
-  showBlock(pointCreateContainer);
+  tripPointsContainer.insertBefore(tripPointCreate.render(), tripPointsContainer.firstChild);
 };
 
 tripPointCreate.onClose = () => {
   tripPointCreate.unrender();
-  hideBlock(pointCreateContainer);
+  tripPointCreate.clearForm();
 };
 
 tripPointCreate.onSubmit = (newObject) => {
@@ -176,11 +186,10 @@ tripPointCreate.onSubmit = (newObject) => {
           tripPointCreate.unblock();
           tripPointCreate.unrender();
           tripPointCreate.clearForm();
-          hideBlock(pointCreateContainer);
 
-          renderFilters(filtersList);
-          renderSortings(sortingsList);
-          renderTripPoints(DATA.POINTS);
+          const sortType = document.querySelector(`input[name=trip-sorting]:checked`);
+          const sortedPoints = sortPoints(DATA.POINTS, sortType.value);
+          renderTripPoints(sortedPoints);
         });
     });
 };

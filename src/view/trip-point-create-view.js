@@ -1,7 +1,7 @@
 import ComponentView from './component';
 import {DATA} from '../data/data';
-// eslint-disable-next-line
 import flatpickr from 'flatpickr';
+import emitter from '../services/emitter';
 
 export default class TripPointCreateView extends ComponentView {
 
@@ -108,14 +108,12 @@ export default class TripPointCreateView extends ComponentView {
 
     if (typeof this._onClose === `function`) {
       this._onClose();
-      this.clearForm();
     }
   }
 
   _onKeyPress(evt) {
     if (evt.key === `Escape` && typeof this._onClose === `function`) {
       this._onClose();
-      this.clearForm();
     }
   }
 
@@ -300,6 +298,8 @@ export default class TripPointCreateView extends ComponentView {
 
     this._calendarDateStart.destroy();
     this._calendarDateEnd.destroy();
+
+    emitter.emit(`unbindTripPointCreate`);
   }
 
   shake() {
