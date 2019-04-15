@@ -13,10 +13,12 @@ export default class TripPointCreateView extends ComponentView {
     this._description = ``;
     this._offers = [];
     this._price = 0;
-    this._dateFrom = 0;
+    this._tripDay = Date.now();
+    this._dateFrom = Date.now();
     this._dateTo = 0;
     this._isFavorite = false;
 
+    this._calendarTripDate = null;
     this._calendarDateStart = null;
     this._calendarDateEnd = null;
 
@@ -213,7 +215,8 @@ export default class TripPointCreateView extends ComponentView {
     this._description = ``;
     this._offers = [];
     this._price = 0;
-    this._dateFrom = 0;
+    this._tripDay = Date.now();
+    this._dateFrom = Date.now();
     this._dateTo = 0;
     this._isFavorite = false;
   }
@@ -254,13 +257,30 @@ export default class TripPointCreateView extends ComponentView {
       it.addEventListener(`change`, this._onTypeChange);
     });
 
+    this._calendarTripDate = flatpickr(this._element.querySelector(`.point__date input`), {
+      altInput: true,
+      altFormat: `M j`,
+      dateFormat: `U`,
+      defaultDate: this._tripDay,
+      onClose: (selectedDates, dateStr) => {
+        this._calendarDateEnd.set(`minDate`, selectedDates[0]);
+        this._calendarDateStart.setDate(selectedDates[0]);
+        this._tripDay = dateStr;
+        this._dateFrom = dateStr;
+      }
+    });
+
     this._calendarDateStart = flatpickr(this._element.querySelector(`.point__time [name='date-start']`), {
       enableTime: true,
       altInput: true,
       altFormat: `H:i`,
       dateFormat: `U`,
+      [`time_24hr`]: true,
       defaultDate: this._dateFrom,
       onClose: (selectedDates, dateStr) => {
+        this._calendarDateEnd.set(`minDate`, selectedDates[0]);
+        this._calendarTripDate.setDate(selectedDates[0]);
+        this._tripDay = dateStr;
         this._dateFrom = dateStr;
       }
     });
@@ -270,8 +290,10 @@ export default class TripPointCreateView extends ComponentView {
       altInput: true,
       altFormat: `H:i`,
       dateFormat: `U`,
+      [`time_24hr`]: true,
       defaultDate: this._dateTo,
       onClose: (selectedDates, dateStr) => {
+        this._calendarDateStart.set(`maxDate`, selectedDates[0]);
         this._dateTo = dateStr;
       }
     });
@@ -296,6 +318,7 @@ export default class TripPointCreateView extends ComponentView {
       it.removeEventListener(`change`, this._onTypeChange);
     });
 
+    this._calendarTripDate.destroy();
     this._calendarDateStart.destroy();
     this._calendarDateEnd.destroy();
 

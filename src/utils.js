@@ -48,6 +48,22 @@ export const sortPoints = (points, sortingName) => {
   }
 };
 
+export const groupPointsByDay = (points) => {
+  points.sort((a, b) => a.dateFrom - b.dateFrom);
+
+  const daysList = [...new Set(points.map((point) => point.tripDay))];
+
+  return daysList.map((day, i) => {
+    return {
+      day: {
+        number: i + 1,
+        date: day
+      },
+      points: points.filter((point) => point.tripDay === day)
+    };
+  });
+};
+
 const objEntriesToObj = (objEntries) => {
   const tempObj = {
     labels: [],

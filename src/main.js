@@ -1,6 +1,6 @@
-import {renderFilters, renderSortings, renderTripPoints} from './screens/trips-screen';
+import {renderFilters, renderSortings, renderTripPoints, renderTripDays} from './screens/trips-screen';
 import {DATA, filtersList, sortingsList} from './data/data';
-import {showBlock, hideBlock} from './utils';
+import {groupPointsByDay, showBlock, hideBlock} from './utils';
 import Provider from './services/provider';
 import Api from './services/api';
 import Store from './services/store';
@@ -39,11 +39,13 @@ export const fetchTripPoints = () => {
 
 fetchTripPoints()
   .then((data) => (DATA.POINTS = data[0]))
-  .then(() => {
+  .then((data) => groupPointsByDay(data))
+  .then((data) => {
     hideBlock(messageContainer);
     showBlock(contentContainer);
 
     renderFilters(filtersList);
     renderSortings(sortingsList);
-    renderTripPoints(DATA.POINTS);
+    renderTripDays(data);
+    // renderTripPoints(DATA.POINTS);
   });

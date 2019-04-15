@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 export default class TripModel {
   constructor(data) {
@@ -8,6 +9,7 @@ export default class TripModel {
     this.pictures = data[`destination`][`pictures`];
     this.offers = data[`offers`];
     this.price = data[`base_price`];
+    this.tripDay = moment(data[`date_from`]).format(`MMM D`);
     this.dateFrom = data[`date_from`];
     this.dateTo = data[`date_to`];
     this.duration = data[`date_to`] - data[`date_from`];

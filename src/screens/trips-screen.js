@@ -1,3 +1,4 @@
+import TripDayView from '../view/trip-day-view';
 import TripPointView from '../view/trip-point-view';
 import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointCreateView from '../view/trip-point-create-view';
@@ -12,7 +13,7 @@ import emitter from '../services/emitter';
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const sortingsContainer = document.querySelector(`.trip-sorting`);
-const tripPointsContainer = document.querySelector(`.trip-day__items`);
+const tripPointsContainer = document.querySelector(`.trip-points`);
 const tripTotalCostContainer = document.querySelector(`.trip__total-cost`);
 
 
@@ -46,17 +47,33 @@ export const renderSortings = (sortings) => {
 };
 
 
-export const renderTripPoints = (points) => {
+export const renderTripDays = (data) => {
   tripPointsContainer.innerHTML = ``;
+
+  data.forEach((item) => {
+    const tripDay = new TripDayView(item.day);
+    const dayElem = tripDay.render();
+
+    const dayPointsContainer = dayElem.querySelector(`.trip-day__items`);
+
+    renderTripPoints(item.points, dayPointsContainer);
+
+    tripPointsContainer.appendChild(dayElem);
+    calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
+  });
+};
+
+
+export const renderTripPoints = (points, container) => {
+  container.innerHTML = ``;
   emitter.emit(`tripPointEditUnrender`);
   emitter.emit(`tripPointCreateUnrender`);
-  calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
 
   points.forEach((point) => {
     const tripPoint = new TripPointView(point);
     const tripPointEdit = new TripPointEditView(point);
 
-    tripPointsContainer.appendChild(tripPoint.render());
+    container.appendChild(tripPoint.render());
 
     emitter.on(`tripPointCreateUnrender`, () => {
       if (tripPointCreate.element) {
@@ -77,7 +94,7 @@ export const renderTripPoints = (points) => {
     emitter.on(`closeTripPointEdit`, () => {
       if (tripPointEdit.element) {
         tripPoint.render();
-        tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+        container.replaceChild(tripPoint.element, tripPointEdit.element);
         tripPointEdit.resetData();
         tripPointEdit.unrender();
       }
@@ -87,7 +104,7 @@ export const renderTripPoints = (points) => {
       emitter.emit(`closeTripPointEdit`);
       emitter.emit(`closeTripPointCreate`);
       tripPointEdit.render();
-      tripPointsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
+      container.replaceChild(tripPointEdit.element, tripPoint.element);
       tripPoint.unrender();
     };
 
@@ -110,7 +127,7 @@ export const renderTripPoints = (points) => {
           tripPointEdit.unblock();
           tripPoint.update(newPoint);
           tripPoint.render();
-          tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+          container.replaceChild(tripPoint.element, tripPointEdit.element);
           tripPointEdit.unrender();
           calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
         })
@@ -140,7 +157,7 @@ export const renderTripPoints = (points) => {
 
     tripPointEdit.onClose = () => {
       tripPoint.render();
-      tripPointsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+      container.replaceChild(tripPoint.element, tripPointEdit.element);
       tripPointEdit.resetData();
       tripPointEdit.unrender();
     };

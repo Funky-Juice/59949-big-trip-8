@@ -348,12 +348,7 @@ export default class TripPointEditView extends ComponentView {
       <div>
       <article class="point">
         <form action="" method="get">
-          <header class="point__header">
-            <label class="point__date">
-              choose day
-              <input class="point__input" type="text" placeholder="MAR 18" name="day">
-            </label>
-      
+          <header class="point__header">      
             <div class="travel-way">
               <label class="travel-way__label" for="travel-way__toggle">${DATA.ICONS[this._type]}</label>
       
