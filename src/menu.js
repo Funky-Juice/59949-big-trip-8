@@ -1,8 +1,8 @@
 import {renderCharts, destroyCharts} from './screens/stats-screen';
-import {renderFilters, renderSortings, renderTripPoints, renderCreateTripPoint} from './screens/trips-screen';
+import {renderFilters, renderSortings, renderCreateTripPoint, renderTripDays} from './screens/trips-screen';
 import {fetchTripPoints} from './main';
 import {DATA, filtersList, sortingsList} from './data/data';
-import {showBlock, hideBlock} from './utils';
+import {showBlock, hideBlock, groupPointsByDay} from './utils';
 import emitter from './services/emitter';
 
 const pointsContainer = document.getElementById(`table`);
@@ -40,11 +40,12 @@ pointsBtn.addEventListener(`click`, () => {
 
   fetchTripPoints()
     .then((data) => (DATA.POINTS = data[0]))
-    .then(() => {
+    .then((data) => groupPointsByDay(data))
+    .then((data) => {
       showBlock(pointsContainer);
       renderFilters(filtersList);
       renderSortings(sortingsList);
-      renderTripPoints(DATA.POINTS);
+      renderTripDays(data);
     });
 });
 

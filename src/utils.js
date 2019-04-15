@@ -34,11 +34,10 @@ export const sortPoints = (points, sortingName) => {
 
   switch (sortingName) {
     case `event`:
-      return points;
+      return Array.from(points).sort((a, b) => a.dateFrom - b.dateFrom);
 
     case `time`:
-      const newArr = Array.from(points);
-      return newArr.sort((a, b) => b.duration - a.duration);
+      return Array.from(points).sort((a, b) => b.duration - a.duration);
 
     case `price`:
       return Array.from(points).sort((a, b) => b.price - a.price);
@@ -49,9 +48,9 @@ export const sortPoints = (points, sortingName) => {
 };
 
 export const groupPointsByDay = (points) => {
-  points.sort((a, b) => a.dateFrom - b.dateFrom);
+  const sortedPoints = sortPoints(points, `event`);
 
-  const daysList = [...new Set(points.map((point) => point.tripDay))];
+  const daysList = [...new Set(sortedPoints.map((point) => point.tripDay))];
 
   return daysList.map((day, i) => {
     return {
@@ -59,7 +58,7 @@ export const groupPointsByDay = (points) => {
         number: i + 1,
         date: day
       },
-      points: points.filter((point) => point.tripDay === day)
+      points: sortedPoints.filter((point) => point.tripDay === day)
     };
   });
 };

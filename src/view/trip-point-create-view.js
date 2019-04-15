@@ -208,6 +208,15 @@ export default class TripPointCreateView extends ComponentView {
     return isValid;
   }
 
+  unrender() {
+    this.unbind();
+    this.clearForm();
+    this._element.remove();
+    this._element = null;
+
+    emitter.emit(`unbindTripPointCreate`);
+  }
+
   clearForm() {
     this._type = ``;
     this._title = ``;
@@ -321,8 +330,6 @@ export default class TripPointCreateView extends ComponentView {
     this._calendarTripDate.destroy();
     this._calendarDateStart.destroy();
     this._calendarDateEnd.destroy();
-
-    emitter.emit(`unbindTripPointCreate`);
   }
 
   shake() {

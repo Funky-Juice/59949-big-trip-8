@@ -270,8 +270,10 @@ export default class TripPointEditView extends ComponentView {
       altInput: true,
       altFormat: `H:i`,
       dateFormat: `U`,
+      [`time_24hr`]: true,
       defaultDate: this._dateFrom,
       onClose: (selectedDates, dateStr) => {
+        this._calendarDateEnd.set(`minDate`, selectedDates[0]);
         this._dateFrom = dateStr;
       }
     });
@@ -281,8 +283,10 @@ export default class TripPointEditView extends ComponentView {
       altInput: true,
       altFormat: `H:i`,
       dateFormat: `U`,
+      [`time_24hr`]: true,
       defaultDate: this._dateTo,
       onClose: (selectedDates, dateStr) => {
+        this._calendarDateStart.set(`maxDate`, selectedDates[0]);
         this._dateTo = dateStr;
       }
     });

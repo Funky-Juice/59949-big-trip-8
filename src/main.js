@@ -1,4 +1,4 @@
-import {renderFilters, renderSortings, renderTripPoints, renderTripDays} from './screens/trips-screen';
+import {renderFilters, renderSortings, renderTripDays} from './screens/trips-screen';
 import {DATA, filtersList, sortingsList} from './data/data';
 import {groupPointsByDay, showBlock, hideBlock} from './utils';
 import Provider from './services/provider';
@@ -47,5 +47,4 @@ fetchTripPoints()
     renderFilters(filtersList);
     renderSortings(sortingsList);
     renderTripDays(data);
-    // renderTripPoints(DATA.POINTS);
   });

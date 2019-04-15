@@ -4,7 +4,7 @@ import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointCreateView from '../view/trip-point-create-view';
 import FilterView from '../view/filter-view';
 import SortingView from '../view/sorting-view';
-import {filterPoints, sortPoints} from '../utils';
+import {filterPoints, groupPointsByDay, sortPoints} from '../utils';
 import {fetchTripPoints, provider} from '../main';
 import {calcTotalPrice} from '../utils';
 import {DATA} from '../data/data';
@@ -26,7 +26,8 @@ export const renderFilters = (filters) => {
 
     filterComponent.onFilter = () => {
       const filteredPoints = filterPoints(DATA.POINTS, filterComponent.name);
-      renderTripPoints(filteredPoints);
+      const filteredDays = groupPointsByDay(filteredPoints);
+      renderTripDays(filteredDays);
     };
   });
 };
@@ -40,8 +41,13 @@ export const renderSortings = (sortings) => {
     sortingsContainer.appendChild(sortingComponent.render());
 
     sortingComponent.onSort = () => {
-      const sortedPoints = sortPoints(DATA.POINTS, sortingComponent.name);
-      renderTripPoints(sortedPoints);
+      if (sortingComponent.name === `event`) {
+        const sortedDays = groupPointsByDay(DATA.POINTS);
+        renderTripDays(sortedDays);
+      } else {
+        const sortedPoints = sortPoints(DATA.POINTS, sortingComponent.name);
+        renderTripPoints(sortedPoints, tripPointsContainer);
+      }
     };
   });
 };
@@ -56,18 +62,18 @@ export const renderTripDays = (data) => {
 
     const dayPointsContainer = dayElem.querySelector(`.trip-day__items`);
 
-    renderTripPoints(item.points, dayPointsContainer);
+    renderTripPoints(item.points, dayPointsContainer, item.day);
 
     tripPointsContainer.appendChild(dayElem);
-    calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
   });
 };
 
 
-export const renderTripPoints = (points, container) => {
+export const renderTripPoints = (points, container, day) => {
   container.innerHTML = ``;
   emitter.emit(`tripPointEditUnrender`);
   emitter.emit(`tripPointCreateUnrender`);
+  calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
 
   points.forEach((point) => {
     const tripPoint = new TripPointView(point);
@@ -88,7 +94,6 @@ export const renderTripPoints = (points, container) => {
     emitter.on(`closeTripPointCreate`, () => {
       if (tripPointCreate.element) {
         tripPointCreate.unrender();
-        tripPointCreate.clearForm();
       }
     });
     emitter.on(`closeTripPointEdit`, () => {
@@ -124,12 +129,19 @@ export const renderTripPoints = (points, container) => {
 
       provider.updateTripPoint({id: point.id, data: point.toRAW()})
         .then((newPoint) => {
-          tripPointEdit.unblock();
-          tripPoint.update(newPoint);
-          tripPoint.render();
-          container.replaceChild(tripPoint.element, tripPointEdit.element);
-          tripPointEdit.unrender();
-          calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
+          if (newPoint.tripDay !== day.date) {
+            fetchTripPoints()
+              .then((data) => (DATA.POINTS = data[0]))
+              .then((data) => groupPointsByDay(data))
+              .then((data) => renderTripDays(data));
+          } else {
+            tripPointEdit.unblock();
+            tripPoint.update(newPoint);
+            tripPoint.render();
+            container.replaceChild(tripPoint.element, tripPointEdit.element);
+            tripPointEdit.unrender();
+            calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
+          }
         })
         .catch(() => {
           tripPointEdit.shake();
@@ -144,9 +156,10 @@ export const renderTripPoints = (points, container) => {
 
       provider.deleteTripPoint(id)
         .then(() => {
-          DATA.POINTS = DATA.POINTS.filter((obj) => obj.id !== id.id);
-          tripPointEdit.unrender();
-          calcTotalPrice(tripTotalCostContainer, DATA.POINTS);
+          fetchTripPoints()
+            .then((data) => (DATA.POINTS = data[0]))
+            .then((data) => groupPointsByDay(data))
+            .then((data) => renderTripDays(data));
         })
         .catch(() => {
           tripPointEdit.shake();
@@ -173,7 +186,6 @@ export const renderCreateTripPoint = () => {
 
 tripPointCreate.onClose = () => {
   tripPointCreate.unrender();
-  tripPointCreate.clearForm();
 };
 
 tripPointCreate.onSubmit = (newObject) => {
@@ -202,11 +214,16 @@ tripPointCreate.onSubmit = (newObject) => {
         .then(() => {
           tripPointCreate.unblock();
           tripPointCreate.unrender();
-          tripPointCreate.clearForm();
 
           const sortType = document.querySelector(`input[name=trip-sorting]:checked`);
-          const sortedPoints = sortPoints(DATA.POINTS, sortType.value);
-          renderTripPoints(sortedPoints);
+
+          if (sortType.value === `event`) {
+            const sortedDays = groupPointsByDay(DATA.POINTS);
+            renderTripDays(sortedDays);
+          } else {
+            const sortedPoints = sortPoints(DATA.POINTS, sortType.value);
+            renderTripPoints(sortedPoints, tripPointsContainer);
+          }
         });
     });
 };
